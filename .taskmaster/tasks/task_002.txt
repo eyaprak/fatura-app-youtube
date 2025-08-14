@@ -1,0 +1,43 @@
+# Task ID: 2
+# Title: Supabase Veritabanı Şeması Oluşturma
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Fişler tablosunun oluşturulması ve gerekli indekslerin tanımlanması
+# Details:
+Supabase Dashboard'da 'fisler' tablosu oluştur: id (UUID, primary key, default gen_random_uuid()), fis_no (TEXT, unique), tarih_saat (TIMESTAMP), created_at (TIMESTAMP, default now()), updated_at (TIMESTAMP, default now()), total (NUMERIC), total_kdv (NUMERIC), items (JSONB). RLS (Row Level Security) politikalarını ayarla. fis_no ve tarih_saat alanları için indeks oluştur. Trigger ile updated_at otomatik güncellenmesi için function yaz.
+
+# Test Strategy:
+Supabase SQL Editor'da tablo yapısını kontrol et, örnek veri ekleyip sorgula, RLS politikalarının çalıştığını doğrula
+
+# Subtasks:
+## 1. Fisler Tablosu Oluşturma [done]
+### Dependencies: None
+### Description: Supabase Dashboard'da fisler tablosunun temel yapısını ve sütunlarını oluşturma
+### Details:
+Supabase Dashboard'a giriş yap ve SQL Editor'ı aç. CREATE TABLE fisler komutu ile tabloyu oluştur: id (UUID, primary key, default gen_random_uuid()), fis_no (TEXT, unique constraint ile), tarih_saat (TIMESTAMP), created_at (TIMESTAMP, default now()), updated_at (TIMESTAMP, default now()), total (NUMERIC(10,2)), total_kdv (NUMERIC(10,2)), items (JSONB). UNIQUE constraint'i fis_no sütunu için ekle.
+
+## 2. Veritabanı İndekslerinin Oluşturulması [done]
+### Dependencies: 2.1
+### Description: Performans için gerekli indekslerin fis_no ve tarih_saat sütunları üzerinde oluşturulması
+### Details:
+SQL Editor'da CREATE INDEX idx_fisler_fis_no ON fisler(fis_no) ve CREATE INDEX idx_fisler_tarih_saat ON fisler(tarih_saat DESC) komutlarını çalıştır. Ayrıca CREATE INDEX idx_fisler_created_at ON fisler(created_at DESC) indeksini de oluştur. EXPLAIN ANALYZE ile sorgu performansını kontrol et.
+
+## 3. Updated_at Otomatik Güncelleme Fonksiyonu [done]
+### Dependencies: 2.1
+### Description: Kayıt güncellendiğinde updated_at sütununu otomatik güncelleyen trigger fonksiyonunun oluşturulması
+### Details:
+SQL Editor'da önce function oluştur: CREATE OR REPLACE FUNCTION update_updated_at_column() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = now(); RETURN NEW; END; $$ language 'plpgsql'. Sonra trigger oluştur: CREATE TRIGGER update_fisler_updated_at BEFORE UPDATE ON fisler FOR EACH ROW EXECUTE FUNCTION update_updated_at_column().
+
+## 4. Row Level Security (RLS) Politikalarının Ayarlanması [done]
+### Dependencies: 2.1
+### Description: Fisler tablosu için güvenlik politikalarının oluşturulması ve RLS'nin etkinleştirilmesi
+### Details:
+SQL Editor'da ALTER TABLE fisler ENABLE ROW LEVEL SECURITY komutu ile RLS'yi etkinleştir. Temel politikalar oluştur: CREATE POLICY fisler_select_policy ON fisler FOR SELECT USING (true) - geçici olarak herkese okuma izni, CREATE POLICY fisler_insert_policy ON fisler FOR INSERT WITH CHECK (true) - geçici olarak herkese yazma izni. Üretim ortamında bu politikalar kullanıcı kimlik doğrulamasına göre güncellenecek.
+
+## 5. Tablo Yapısının Doğrulanması ve Test Verisi Ekleme [done]
+### Dependencies: 2.1, 2.2, 2.3, 2.4
+### Description: Oluşturulan tablo yapısının tam kontrolü ve örnek test verilerinin eklenmesi
+### Details:
+SQL Editor'da SELECT column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = 'fisler' sorgusu ile tablo yapısını kontrol et. Örnek test verileri ekle: INSERT INTO fisler (fis_no, tarih_saat, total, total_kdv, items) VALUES ('F001', now(), 100.00, 18.00, '[{"name":"Test Ürün","quantity":1,"price":100}]'). Tüm constraint'lerin ve trigger'ların çalıştığını doğrula.
+

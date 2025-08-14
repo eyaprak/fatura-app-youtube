@@ -1,0 +1,830 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Proje Kurulumu ve Temel Yapılandırma",
+        "description": "Next.js 15 projesi kurulumu, Tailwind CSS konfigürasyonu, Supabase bağlantısı ve temel klasör yapısının oluşturulması",
+        "details": "Next.js 15 ile yeni proje oluştur: `npx create-next-app@latest fatura-dashboard --typescript --tailwind --eslint --app`. Supabase client kurulumu (@supabase/supabase-js), react-hot-toast, lucide-react, date-fns paketlerini yükle. Tailwind config'de custom renkler (blue-600 primary, green-500 success vb.) ve spacing değerlerini tanımla. .env.local dosyasında SUPABASE_URL ve SUPABASE_ANON_KEY değişkenlerini ayarla. /lib/supabase.ts dosyasında client konfigürasyonu yap.",
+        "testStrategy": "Proje başlatma (npm run dev), Supabase bağlantı testi, Tailwind CSS sınıflarının çalışması ve TypeScript derlemesinin hatasız olması kontrol edilecek",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Next.js 15 Projesi Oluşturma ve Temel Paket Kurulumu",
+            "description": "Next.js 15 ile yeni proje oluşturulması ve gerekli paketlerin yüklenmesi",
+            "dependencies": [],
+            "details": "Terminal'de `npx create-next-app@latest fatura-dashboard --typescript --tailwind --eslint --app` komutu ile proje oluştur. Ardından proje dizinine geç ve şu paketleri yükle: `npm install @supabase/supabase-js react-hot-toast lucide-react date-fns swr`. package.json dosyasında tüm paketlerin doğru versiyonlarda yüklendiğini kontrol et. TypeScript ve ESLint konfigürasyonlarının aktif olduğunu doğrula.",
+            "status": "done",
+            "testStrategy": "npm run dev komutu ile projenin başarılı şekilde ayağa kalkması ve localhost:3000'de Next.js welcome sayfasının görüntülenmesi"
+          },
+          {
+            "id": 2,
+            "title": "Tailwind CSS Özelleştirme ve Tema Konfigürasyonu",
+            "description": "Tailwind CSS'de custom renkler ve spacing değerlerinin tanımlanması",
+            "dependencies": [],
+            "details": "tailwind.config.js dosyasını düzenle. theme.extend bölümüne custom renkler ekle: primary: 'rgb(37 99 235)', success: 'rgb(34 197 94)', danger: 'rgb(239 68 68)', warning: 'rgb(245 158 11)', gray: { 50: 'rgb(249 250 251)', 100: 'rgb(243 244 246)', 900: 'rgb(17 24 39)' }. Custom spacing değerleri ve font ailelerini tanımla. globals.css dosyasında temel stil sınıflarını oluştur.",
+            "status": "done",
+            "testStrategy": "Basit bir component oluşturup custom renklerin (bg-primary, text-success vb.) doğru şekilde uygulandığını kontrol etme"
+          },
+          {
+            "id": 3,
+            "title": "Environment Variables ve Supabase Client Konfigürasyonu",
+            "description": "Çevre değişkenlerinin ayarlanması ve Supabase client'ının yapılandırılması",
+            "dependencies": [],
+            "details": ".env.local dosyası oluştur ve SUPABASE_URL, SUPABASE_ANON_KEY değişkenlerini ekle. lib klasörü oluştur ve içinde supabase.ts dosyası yarat. createClient fonksiyonu ile Supabase client'ını initialize et. TypeScript için types klasörü oluştur ve supabase.ts'de Database tiplerini tanımla. Client'ın singleton pattern ile export edilmesini sağla.",
+            "status": "done",
+            "testStrategy": "lib/supabase.ts dosyasından client'ı import edip basit bir bağlantı testi yapma (örneğin supabase.from('fisler').select('count') sorgusu)"
+          },
+          {
+            "id": 4,
+            "title": "Proje Klasör Yapısı ve Temel Dosya Organizasyonu",
+            "description": "Projenin temel klasör yapısının oluşturulması ve dosya organizasyonunun kurulması",
+            "dependencies": [],
+            "details": "app dizini altında: components (ui, forms, layout alt klasörleri), hooks, lib (utils, validations alt klasörleri), types klasörlerini oluştur. components/ui klasöründe Button, Card, Input gibi temel UI bileşenlerinin boş template'lerini hazırla. lib/utils.ts'de cn (className merge) fonksiyonu ve diğer yardımcı fonksiyonları ekle. types/index.ts'de Fiş, FişItem gibi temel tip tanımlarını yap.",
+            "status": "done",
+            "testStrategy": "Tüm klasörlerin doğru şekilde oluşturulması ve temel import/export işlemlerinin çalışması"
+          },
+          {
+            "id": 5,
+            "title": "Geliştirme Ortamı Doğrulama ve İlk Çalıştırma Testi",
+            "description": "Tüm konfigürasyonların doğrulanması ve projenin çalışır durumda olmasının sağlanması",
+            "dependencies": [],
+            "details": "npm run dev ile projeyi başlat ve herhangi bir hata olmadığını kontrol et. TypeScript derlemesinin başarılı olduğunu doğrula (npm run build). ESLint kurallarının çalıştığını test et (npm run lint). Tailwind CSS sınıflarının aktif olduğunu basit bir test sayfası ile kontrol et. Supabase bağlantısının çalıştığını doğrula. Hot reload özelliğinin aktif olduğunu test et.",
+            "status": "done",
+            "testStrategy": "Proje başlatma, build alma, lint kontrolü ve Supabase bağlantı testlerinin tümünün başarılı olması. Browser console'da herhangi bir hata mesajının bulunmaması"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Supabase Veritabanı Şeması Oluşturma",
+        "description": "Fişler tablosunun oluşturulması ve gerekli indekslerin tanımlanması",
+        "details": "Supabase Dashboard'da 'fisler' tablosu oluştur: id (UUID, primary key, default gen_random_uuid()), fis_no (TEXT, unique), tarih_saat (TIMESTAMP), created_at (TIMESTAMP, default now()), updated_at (TIMESTAMP, default now()), total (NUMERIC), total_kdv (NUMERIC), items (JSONB). RLS (Row Level Security) politikalarını ayarla. fis_no ve tarih_saat alanları için indeks oluştur. Trigger ile updated_at otomatik güncellenmesi için function yaz.",
+        "testStrategy": "Supabase SQL Editor'da tablo yapısını kontrol et, örnek veri ekleyip sorgula, RLS politikalarının çalıştığını doğrula",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Fisler Tablosu Oluşturma",
+            "description": "Supabase Dashboard'da fisler tablosunun temel yapısını ve sütunlarını oluşturma",
+            "dependencies": [],
+            "details": "Supabase Dashboard'a giriş yap ve SQL Editor'ı aç. CREATE TABLE fisler komutu ile tabloyu oluştur: id (UUID, primary key, default gen_random_uuid()), fis_no (TEXT, unique constraint ile), tarih_saat (TIMESTAMP), created_at (TIMESTAMP, default now()), updated_at (TIMESTAMP, default now()), total (NUMERIC(10,2)), total_kdv (NUMERIC(10,2)), items (JSONB). UNIQUE constraint'i fis_no sütunu için ekle.",
+            "status": "done",
+            "testStrategy": "SQL Editor'da DESCRIBE fisler komutu ile tablo yapısını kontrol et, örnek INSERT komutu çalıştırarak sütun tiplerinin doğru çalıştığını test et"
+          },
+          {
+            "id": 2,
+            "title": "Veritabanı İndekslerinin Oluşturulması",
+            "description": "Performans için gerekli indekslerin fis_no ve tarih_saat sütunları üzerinde oluşturulması",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "SQL Editor'da CREATE INDEX idx_fisler_fis_no ON fisler(fis_no) ve CREATE INDEX idx_fisler_tarih_saat ON fisler(tarih_saat DESC) komutlarını çalıştır. Ayrıca CREATE INDEX idx_fisler_created_at ON fisler(created_at DESC) indeksini de oluştur. EXPLAIN ANALYZE ile sorgu performansını kontrol et.",
+            "status": "done",
+            "testStrategy": "EXPLAIN ANALYZE SELECT * FROM fisler WHERE fis_no = 'test' ve WHERE tarih_saat BETWEEN 'date1' AND 'date2' sorgularında indeks kullanımını kontrol et"
+          },
+          {
+            "id": 3,
+            "title": "Updated_at Otomatik Güncelleme Fonksiyonu",
+            "description": "Kayıt güncellendiğinde updated_at sütununu otomatik güncelleyen trigger fonksiyonunun oluşturulması",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "SQL Editor'da önce function oluştur: CREATE OR REPLACE FUNCTION update_updated_at_column() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = now(); RETURN NEW; END; $$ language 'plpgsql'. Sonra trigger oluştur: CREATE TRIGGER update_fisler_updated_at BEFORE UPDATE ON fisler FOR EACH ROW EXECUTE FUNCTION update_updated_at_column().",
+            "status": "done",
+            "testStrategy": "Mevcut bir kayıt üzerinde UPDATE işlemi yap ve updated_at sütununun otomatik güncellendiğini kontrol et"
+          },
+          {
+            "id": 4,
+            "title": "Row Level Security (RLS) Politikalarının Ayarlanması",
+            "description": "Fisler tablosu için güvenlik politikalarının oluşturulması ve RLS'nin etkinleştirilmesi",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "SQL Editor'da ALTER TABLE fisler ENABLE ROW LEVEL SECURITY komutu ile RLS'yi etkinleştir. Temel politikalar oluştur: CREATE POLICY fisler_select_policy ON fisler FOR SELECT USING (true) - geçici olarak herkese okuma izni, CREATE POLICY fisler_insert_policy ON fisler FOR INSERT WITH CHECK (true) - geçici olarak herkese yazma izni. Üretim ortamında bu politikalar kullanıcı kimlik doğrulamasına göre güncellenecek.",
+            "status": "done",
+            "testStrategy": "Supabase client üzerinden SELECT ve INSERT işlemlerinin RLS politikaları ile çalıştığını test et"
+          },
+          {
+            "id": 5,
+            "title": "Tablo Yapısının Doğrulanması ve Test Verisi Ekleme",
+            "description": "Oluşturulan tablo yapısının tam kontrolü ve örnek test verilerinin eklenmesi",
+            "dependencies": [
+              "2.1",
+              "2.2",
+              "2.3",
+              "2.4"
+            ],
+            "details": "SQL Editor'da SELECT column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = 'fisler' sorgusu ile tablo yapısını kontrol et. Örnek test verileri ekle: INSERT INTO fisler (fis_no, tarih_saat, total, total_kdv, items) VALUES ('F001', now(), 100.00, 18.00, '[{\"name\":\"Test Ürün\",\"quantity\":1,\"price\":100}]'). Tüm constraint'lerin ve trigger'ların çalıştığını doğrula.",
+            "status": "done",
+            "testStrategy": "Test verisi ekleme, unique constraint ihlali testi, trigger çalışma testi ve RLS politikalarının aktif olduğunu kontrol et"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Temel Layout ve Header Bileşeni",
+        "description": "Ana layout yapısı, header bileşeni ve navigasyon menüsünün oluşturulması",
+        "details": "app/layout.tsx'de temel layout yapısı kur. components/Header.tsx oluştur: 64px yükseklik, bg-white, shadow-sm, sol tarafta 'FY' logosu, sağ tarafta 'Ana Sayfa' linki. Responsive tasarım için max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 container kullan. Klavye erişilebilirliği için focus-visible stilleri ekle. Toast provider'ı layout'a entegre et.",
+        "testStrategy": "Header'ın farklı ekran boyutlarında doğru görünümü, klavye navigasyonu, focus stilleri ve toast mesajlarının çalışması test edilecek",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Ana Layout Yapısının Oluşturulması",
+            "description": "app/layout.tsx dosyasında temel layout yapısını kurma ve gerekli provider'ları entegre etme",
+            "dependencies": [],
+            "details": "app/layout.tsx dosyasını düzenle. HTML yapısını oluştur: html lang='tr', body className ile temel stiller. Metadata ayarları (title, description). Toast provider'ı (react-hot-toast) layout'a entegre et. Font optimizasyonu için Inter font'unu next/font/google'dan import et. Global CSS import'ları ekle.",
+            "status": "done",
+            "testStrategy": "Layout'un doğru render edilmesi, toast provider'ın çalışması ve font yüklemesinin kontrol edilmesi"
+          },
+          {
+            "id": 2,
+            "title": "Header Bileşeni Temel Yapısının Oluşturulması",
+            "description": "components/Header.tsx dosyasını oluşturma ve temel HTML yapısını kurma",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "components/Header.tsx dosyası oluştur. React functional component yapısı kur. Header elementi: 64px yükseklik (h-16), bg-white, shadow-sm sınıfları. Container div: max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 responsive padding'ler. Flex layout: justify-between items-center ile logo ve navigasyon alanlarını ayır.",
+            "status": "done",
+            "testStrategy": "Header bileşeninin render edilmesi ve temel CSS sınıflarının uygulanması"
+          },
+          {
+            "id": 3,
+            "title": "Logo ve Navigasyon Elementlerinin Eklenmesi",
+            "description": "Header içerisine FY logosu ve Ana Sayfa linkinin eklenmesi",
+            "dependencies": [
+              "3.2"
+            ],
+            "details": "Sol tarafta logo alanı: 'FY' text'i için span elementi, font-bold text-xl text-blue-600 sınıfları. Sağ tarafta navigasyon: nav elementi içinde ul>li>Link yapısı. 'Ana Sayfa' linki: Next.js Link component'i kullan, href='/', text-gray-700 hover:text-blue-600 transition-colors sınıfları.",
+            "status": "done",
+            "testStrategy": "Logo görünümü, link'in doğru çalışması ve hover efektlerinin test edilmesi"
+          },
+          {
+            "id": 4,
+            "title": "Responsive Tasarım ve Erişilebilirlik Özelliklerinin Eklenmesi",
+            "description": "Header bileşenine responsive davranış ve klavye erişilebilirliği ekleme",
+            "dependencies": [
+              "3.3"
+            ],
+            "details": "Responsive breakpoint'ler: sm:px-6 lg:px-8 padding ayarları. Mobile görünüm için logo boyutunu ayarla (text-lg sm:text-xl). Klavye erişilebilirliği: focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sınıfları link'lere ekle. ARIA etiketleri: nav role='navigation' aria-label='Ana navigasyon'.",
+            "status": "done",
+            "testStrategy": "Farklı ekran boyutlarında görünüm, klavye ile navigasyon ve focus ring'lerinin test edilmesi"
+          },
+          {
+            "id": 5,
+            "title": "Header Bileşeninin Layout'a Entegrasyonu",
+            "description": "Oluşturulan Header bileşenini ana layout'a entegre etme ve final testleri",
+            "dependencies": [
+              "3.1",
+              "3.4"
+            ],
+            "details": "app/layout.tsx dosyasında Header bileşenini import et. Body içerisinde Header'ı en üste yerleştir. Main content alanı için: main elementi, min-h-screen pt-16 (header yüksekliği kadar top padding) sınıfları. Children prop'unu main içerisine yerleştir. TypeScript tip tanımlarını kontrol et.",
+            "status": "done",
+            "testStrategy": "Header'ın layout'da doğru konumlanması, sayfa içeriğinin header altında görünmesi ve genel layout'un responsive davranışının test edilmesi"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "İstatistik Kartları Bileşeni",
+        "description": "Dashboard anasayfasında gösterilecek 5 adet istatistik kartının geliştirilmesi",
+        "details": "components/StatCard.tsx bileşeni oluştur: rounded-2xl border bg-white p-4 shadow-sm stil. Sol tarafta ikon rozeti (36x36 rounded-full p-2 bg-slate-50), sağ tarafta başlık ve değer. Lucide ikonları kullan: ListChecks (toplam kayıt), Coins (toplam tutar), Percent (toplam KDV), CalendarClock (bugünkü kayıtlar), Gauge (ortalama tutar). Hover efekti: shadow-md translate-y-[1px]. Değer metni için tabular-nums font kullan. Grid layout: grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4.",
+        "testStrategy": "Kartların responsive davranışı, hover efektleri, ikon görünümü ve sayısal değerlerin doğru formatlanması test edilecek",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "StatCard Temel Bileşeni Oluşturma",
+            "description": "StatCard.tsx bileşeninin temel yapısının ve stillerinin oluşturulması",
+            "dependencies": [],
+            "details": "components/StatCard.tsx dosyasını oluştur. Bileşen props interface'i tanımla: title (string), value (string|number), icon (LucideIcon), iconBgColor (optional). Temel JSX yapısı: rounded-2xl border bg-white p-4 shadow-sm container, sol tarafta ikon rozeti (36x36 rounded-full p-2 bg-slate-50), sağ tarafta başlık ve değer div'i. Hover efekti için transition-all duration-200 hover:shadow-md hover:-translate-y-[1px] sınıflarını ekle. Değer metni için font-mono tabular-nums sınıflarını kullan.",
+            "status": "done",
+            "testStrategy": "Bileşenin render olması, props'ların doğru geçirilmesi ve temel stillerin uygulanması test edilecek"
+          },
+          {
+            "id": 2,
+            "title": "Lucide İkonları Entegrasyonu",
+            "description": "Gerekli Lucide ikonlarının import edilmesi ve StatCard bileşeninde kullanılması",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "lucide-react paketinden gerekli ikonları import et: ListChecks, Coins, Percent, CalendarClock, Gauge. StatCard bileşeninde icon prop'unu dinamik olarak render et. İkon bileşenini 20x20 boyutunda (size={20}) ve text-slate-600 rengiyle göster. İkon rozeti için bg-slate-50 arka plan rengini uygula. Her ikon için uygun aria-label ekle.",
+            "status": "done",
+            "testStrategy": "Tüm ikonların doğru görüntülenmesi, boyut ve renk özelliklerinin uygulanması test edilecek"
+          },
+          {
+            "id": 3,
+            "title": "İstatistik Veri Tiplerini Tanımlama",
+            "description": "İstatistik kartlarında gösterilecek veri tiplerinin ve formatlarının belirlenmesi",
+            "dependencies": [
+              "4.2"
+            ],
+            "details": "types/stats.ts dosyası oluştur. StatItem interface'i tanımla: id, title, value, icon, formatType ('number' | 'currency' | 'percentage'). Beş istatistik için sabit veri yapısı oluştur: toplam kayıt (ListChecks), toplam tutar (Coins), toplam KDV (Percent), bugünkü kayıtlar (CalendarClock), ortalama tutar (Gauge). Sayı formatlama fonksiyonları ekle: formatCurrency (Türk Lirası), formatNumber (binlik ayırıcı), formatPercentage.",
+            "status": "done",
+            "testStrategy": "Veri tiplerinin doğru tanımlanması ve formatlama fonksiyonlarının çalışması test edilecek"
+          },
+          {
+            "id": 4,
+            "title": "İstatistik Kartları Grid Layout'u",
+            "description": "5 adet istatistik kartının responsive grid düzeninde gösterilmesi",
+            "dependencies": [
+              "4.1",
+              "4.3"
+            ],
+            "details": "components/StatsGrid.tsx bileşeni oluştur. Grid container için 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4' sınıflarını kullan. Her StatCard için mock veri ile render et. Responsive breakpoint'lerde doğru görünüm: mobile'da tek sütun, tablet'te 2 sütun, desktop'ta 5 sütun. Container max genişliği ve padding ayarları ekle. Loading state için skeleton kartları oluştur.",
+            "status": "done",
+            "testStrategy": "Grid layout'unun farklı ekran boyutlarında doğru çalışması ve responsive davranışı test edilecek"
+          },
+          {
+            "id": 5,
+            "title": "İstatistik Verilerini API'den Çekme",
+            "description": "Gerçek istatistik verilerinin Supabase'den çekilmesi ve kartlarda gösterilmesi",
+            "dependencies": [
+              "4.4"
+            ],
+            "details": "lib/api/stats.ts dosyası oluştur. getStats fonksiyonu ile Supabase'den istatistikleri çek: COUNT(*) toplam kayıt, SUM(total) toplam tutar, SUM(total_kdv) toplam KDV, bugünkü kayıtlar için WHERE DATE(created_at) = CURRENT_DATE, AVG(total) ortalama tutar. StatsGrid bileşeninde SWR ile veri çekme, loading ve error state'leri. Veri güncellendiğinde otomatik yenileme için mutate kullan. Error boundary ile hata yakalama.",
+            "status": "done",
+            "testStrategy": "API çağrılarının başarılı olması, verilerin doğru formatlanması, loading/error durumlarının test edilmesi"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Dosya Yükleme (Dropzone) Bileşeni",
+        "description": "Fiş/fatura görsellerini yüklemek için drag-drop destekli dosya yükleme bileşeninin geliştirilmesi",
+        "details": "components/FileUpload.tsx oluştur: drag-drop desteği, JPG/JPEG/PNG formatları, max 10MB boyut kontrolü. Durumlar: idle (border-dashed border-gray-300), drag-over (border-blue-400 bg-blue-50), uploading (progress bar), success/error. ImagePlus ikonu kullan. AbortController ile iptal desteği. Erişilebilirlik: role='button', aria-label, klavye desteği (Enter/Space). Progress bar için h-2 rounded bg-blue-600 stil. Hata durumunda Alert bileşeni göster.",
+        "testStrategy": "Drag-drop işlevi, dosya türü/boyut validasyonu, progress bar animasyonu, iptal işlemi ve erişilebilirlik özelliklerinin test edilmesi",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Temel FileUpload Bileşeni Yapısı ve Drag-Drop Desteği",
+            "description": "FileUpload.tsx bileşeninin temel yapısını oluşturmak ve drag-drop işlevselliğini implement etmek",
+            "dependencies": [],
+            "details": "components/FileUpload.tsx dosyasını oluştur. React useState ile drag durumunu yönet (isDragOver). onDragEnter, onDragLeave, onDragOver, onDrop event handler'larını implement et. Drag-drop alanı için div container'ı oluştur. ImagePlus ikonunu lucide-react'tan import et ve merkeze yerleştir. Temel CSS sınıflarını uygula: border-2 border-dashed, min-height, flex, items-center, justify-center.\n<info added on 2025-08-13T13:46:12.137Z>\nFileUpload bileşeni başarıyla tamamlandı. Bileşen app/components/forms/file-upload.tsx konumunda oluşturuldu ve aşağıdaki özellikler implement edildi:\n\nTemel Özellikler:\n- Drag-drop desteği (handleDragEnter, handleDragLeave, handleDrop)\n- File input ile manuel dosya seçimi\n- TypeScript interfaces (FileUploadProps, UploadState)\n- State management (uploadState, uploadProgress, errorMessage, selectedFile)\n- Ref kullanımı (fileInputRef, abortControllerRef)\n\nUI ve Erişilebilirlik:\n- ImagePlus, X, Upload ikonları (Lucide React)\n- Klavye navigasyonu (Enter/Space tuşları)\n- ARIA etiketleri (role='button', aria-label)\n- Focus management ve tabIndex\n- Button component entegrasyonu\n\nDurum Yönetimi:\n- UploadState types: idle, dragover, uploading, success, error\n- Callback functions: onFileSelect, onUploadComplete\n- Progress tracking ve error handling\n\nSonraki adım: Dosya validasyonu ve boyut kontrolü (Task 5.2) için hazır.\n</info added on 2025-08-13T13:46:12.137Z>",
+            "status": "done",
+            "testStrategy": "Drag-drop işlevselliğinin çalışması, dosya bırakıldığında onDrop event'inin tetiklenmesi ve drag durumunun doğru şekilde güncellenmesi test edilecek"
+          },
+          {
+            "id": 2,
+            "title": "Dosya Validasyonu ve Boyut Kontrolü",
+            "description": "Yüklenen dosyaların format ve boyut kontrollerini implement etmek",
+            "dependencies": [
+              "5.1"
+            ],
+            "details": "Dosya türü validasyonu için accept özelliğini '.jpg,.jpeg,.png' olarak ayarla. File nesnesinin type özelliğini kontrol et (image/jpeg, image/jpg, image/png). Maksimum dosya boyutu kontrolü için 10MB (10 * 1024 * 1024 bytes) limiti uygula. Validasyon hatalarını state'te tut ve kullanıcıya göster. validateFile fonksiyonu oluştur ve hem drag-drop hem de file input için kullan.\n<info added on 2025-08-13T13:46:51.068Z>\nDosya validasyonu ve boyut kontrolü başarıyla tamamlandı. allowedTypes array'i ile JPG, JPEG ve PNG formatları destekleniyor. maxSize 10MB olarak ayarlandı. validateFile fonksiyonu useCallback hook ile optimize edildi ve { valid: boolean; error?: string } formatında response döndürüyor. handleFileSelect içinde validateFile çağrılarak invalid dosyalar için error state set ediliyor. Kullanıcı dostu hata mesajları gösteriliyor: 'Sadece JPG, JPEG ve PNG dosyaları desteklenir.' ve 'Dosya boyutu 10MB'dan küçük olmalıdır.' Hem drag-drop hem de file input için validasyon aktif. Sıradaki adım görsel durumlar ve styling (Task 5.3).\n</info added on 2025-08-13T13:46:51.068Z>",
+            "status": "done",
+            "testStrategy": "Farklı dosya türlerinin (PDF, GIF vb.) reddedilmesi, 10MB'dan büyük dosyaların reddedilmesi ve geçerli dosyaların kabul edilmesi test edilecek"
+          },
+          {
+            "id": 3,
+            "title": "Görsel Durumlar ve Styling",
+            "description": "Farklı durumlar için görsel stilleri ve progress bar'ı implement etmek",
+            "dependencies": [
+              "5.1"
+            ],
+            "details": "Durum yönetimi için uploadStatus state'i oluştur ('idle', 'dragOver', 'uploading', 'success', 'error'). Idle durumu: border-dashed border-gray-300. Drag-over durumu: border-blue-400 bg-blue-50. Uploading durumu için progress bar component'i oluştur: h-2 rounded bg-gray-200 container, h-2 rounded bg-blue-600 progress bar. Progress state'i ile yükleme yüzdesini takip et. Success/error durumları için uygun renk ve ikon değişiklikleri uygula.\n<info added on 2025-08-13T13:47:38.031Z>\nGörsel durumlar ve styling implementasyonu tamamlandı. Tüm UploadState türleri ('idle', 'dragover', 'uploading', 'success', 'error') için farklı görsel feedback'ler uygulandı. IDLE durumu için border-gray-300 hover:border-gray-400 ve 'Fiş veya fatura görseli yükleyin' mesajı. DRAGOVER durumu için border-blue-400 bg-blue-50 ve 'Dosyayı buraya bırakın' mesajı. UPLOADING durumu için animate-pulse efekti, progress bar (bg-blue-600) ve iptal butonu. SUCCESS durumu için border-green-300 bg-green-50 ve 'Başarıyla yüklendi!' mesajı. ERROR durumu için border-red-300 bg-red-50 ve hata mesajı gösterimi. Ek özellikler: dosya önizlemesi (isim ve boyut), Reset & Upload butonları, disabled state styling (opacity-50), smooth transitions (transition-all duration-200) ve PRD uyumlu rounded-2xl border'lar eklendi. Ana sayfa entegrasyonu için hazır (Task 5.4).\n</info added on 2025-08-13T13:47:38.031Z>",
+            "status": "done",
+            "testStrategy": "Tüm durumların doğru stilleri göstermesi, progress bar'ın animasyonlu olarak güncellenmesi ve renk geçişlerinin smooth olması test edilecek"
+          },
+          {
+            "id": 4,
+            "title": "Dosya Yükleme İşlemi ve AbortController",
+            "description": "Dosya yükleme API çağrısını ve iptal işlevselliğini implement etmek",
+            "dependencies": [
+              "5.2",
+              "5.3"
+            ],
+            "details": "AbortController instance'ı oluştur ve yükleme işlemi sırasında sakla. FormData ile dosyayı hazırla ve /api/upload endpoint'ine POST request gönder. XMLHttpRequest veya fetch API ile progress tracking implement et. Upload progress event'lerini dinle ve progress state'ini güncelle. İptal butonu oluştur ve AbortController.abort() metodunu çağır. Başarılı yükleme sonrası success durumuna geç, hata durumunda error state'ine geç.\n<info added on 2025-08-13T13:49:26.561Z>\nAna sayfa entegrasyonu başarıyla tamamlandı. app/page.tsx dosyasında 'use client' directive eklendi ve FileUpload bileşeni import edildi. React Hot Toast entegrasyonu yapıldı. handleFileSelect ve handleUploadComplete callback fonksiyonları implement edildi. Dosya Yükleme bölümü centered design ile rounded-2xl styling kullanılarak eklendi. Toast bildirimleri için success (dosya seçimi ve upload tamamlama) ve error (upload hatası) durumları yapılandırıldı. UI test kartları FileUpload referansı ile güncellendi ve toast test kartı eklendi. Status indicator 'FileUpload Bileşeni Hazır!' olarak güncellendi. Build test (npm run build) başarılı, TypeScript hataları yok, linting geçti ve static page generation başarılı.\n</info added on 2025-08-13T13:49:26.561Z>",
+            "status": "done",
+            "testStrategy": "Dosya yükleme işleminin başlatılması, progress tracking'in çalışması, iptal işlevinin dosya yüklemeyi durdurması ve hata durumlarının doğru handle edilmesi test edilecek"
+          },
+          {
+            "id": 5,
+            "title": "Erişilebilirlik ve Hata Yönetimi",
+            "description": "Erişilebilirlik özelliklerini ve hata gösterimini implement etmek",
+            "dependencies": [
+              "5.3",
+              "5.4"
+            ],
+            "details": "Drag-drop alanına role='button', tabIndex={0} ve uygun aria-label ekle. Klavye desteği için onKeyDown handler'ı implement et (Enter ve Space tuşları). Screen reader'lar için aria-describedby ile yükleme durumunu açıkla. Hata durumları için Alert bileşenini import et ve kullan. Hata mesajlarını kullanıcı dostu şekilde göster. Focus management için useRef hook'u kullan ve yükleme tamamlandığında focus'u uygun elemana yönlendir.",
+            "status": "done",
+            "testStrategy": "Klavye navigasyonunun çalışması, screen reader uyumluluğunun test edilmesi, hata mesajlarının görünürlüğü ve Alert bileşeninin doğru şekilde render edilmesi test edilecek"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "API Route ve n8n Webhook Entegrasyonu",
+        "description": "Dosya yükleme için Next.js API route'u ve n8n webhook'una veri gönderimi",
+        "details": "app/api/upload/route.ts oluştur: POST endpoint, multipart/form-data ile dosya al, n8n webhook URL'ine FormData olarak gönder. Hata yönetimi ve timeout (30s) ayarla. n8n workflow response'unu kontrol et: { 'upload': 'success' } formatı bekle. Dosya boyutu ve türü server-side validasyonu. CORS ayarları gerekirse ekle. Environment variable olarak N8N_WEBHOOK_URL tanımla.",
+        "testStrategy": "API endpoint'in dosya alması, n8n webhook'una başarılı gönderim, hata durumlarında uygun response dönmesi ve timeout senaryolarının test edilmesi",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Environment Variable ve Temel API Route Yapısı",
+            "description": "N8N_WEBHOOK_URL environment variable'ını tanımla ve temel API route yapısını oluştur",
+            "dependencies": [],
+            "details": ".env.local dosyasına N8N_WEBHOOK_URL environment variable'ını ekle. app/api/upload/route.ts dosyasını oluştur ve temel POST endpoint yapısını kur. Next.js API route handler'ı için gerekli import'ları ekle (NextRequest, NextResponse). Environment variable'ın varlığını kontrol eden temel yapıyı oluştur.\n<info added on 2025-08-13T13:54:42.729Z>\nSubtask 6.1 başarıyla tamamlandı! Environment variable konfigürasyonu ve temel API route yapısı kuruldu. N8N_WEBHOOK_URL (.env.local) eklendi, default değer http://localhost:5678/webhook/fatura-upload olarak ayarlandı. app/api/upload-file/route.ts dosyası oluşturuldu ve POST method ile kapsamlı hata yönetimi implement edildi. GET method için 405 Method Not Allowed response'u eklendi. TypeScript interface'leri (UploadResponse) tanımlandı. Multipart form data, content-type, dosya formatı (JPG/JPEG/PNG) ve boyut (10MB limit) validasyonları eklendi. Upload metadata (uploadId, timestamp) üretimi implement edildi. Standardize edilmiş response yapısı ve hata kodları (CONFIGURATION_ERROR, INVALID_CONTENT_TYPE vb.) oluşturuldu. Build ve ESLint testleri başarılı, route kaydı tamamlandı.\n</info added on 2025-08-13T13:54:42.729Z>",
+            "status": "done",
+            "testStrategy": "Environment variable'ın doğru okunduğunu ve API route'unun erişilebilir olduğunu test et"
+          },
+          {
+            "id": 2,
+            "title": "Multipart Form Data İşleme ve Dosya Validasyonu",
+            "description": "Gelen multipart/form-data'yı işle ve server-side dosya validasyonunu uygula",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "request.formData() ile multipart form data'yı parse et. Dosya boyutu kontrolü (max 10MB), dosya türü validasyonu (JPG, JPEG, PNG) ve dosya varlığı kontrollerini implement et. Validasyon hatalarında uygun HTTP status code'ları (400, 413) ile error response'ları döndür. FormData objesinden dosyayı extract etme işlemini gerçekleştir.",
+            "status": "done",
+            "testStrategy": "Farklı dosya boyutları, türleri ve geçersiz dosyalarla validasyon testleri yap"
+          },
+          {
+            "id": 3,
+            "title": "N8N Webhook'una Veri Gönderimi",
+            "description": "Validasyondan geçen dosyayı n8n webhook'una FormData olarak gönder",
+            "dependencies": [
+              "6.2"
+            ],
+            "details": "Yeni bir FormData objesi oluştur ve dosyayı append et. fetch() API'si ile n8n webhook URL'ine POST request gönder. Request headers'ında Content-Type'ı multipart/form-data olarak ayarla. Webhook'a gönderilecek FormData'yı hazırla ve additional metadata (timestamp, filename) ekle.",
+            "status": "done",
+            "testStrategy": "N8N webhook'unun dosyayı başarılı şekilde aldığını ve işlediğini doğrula"
+          },
+          {
+            "id": 4,
+            "title": "Timeout ve Hata Yönetimi",
+            "description": "30 saniye timeout ayarla ve kapsamlı hata yönetimi sistemini implement et",
+            "dependencies": [
+              "6.3"
+            ],
+            "details": "AbortController ile 30 saniye timeout mekanizması kur. Network hataları, timeout durumları ve n8n webhook'undan gelen hataları yakala. Try-catch blokları ile error handling yap. Farklı hata türleri için uygun HTTP status code'ları (408 timeout, 502 webhook error, 500 server error) döndür. Error logging için console.error kullan.",
+            "status": "done",
+            "testStrategy": "Timeout senaryoları, network hataları ve webhook'tan gelen error response'ları test et"
+          },
+          {
+            "id": 5,
+            "title": "Response Validasyonu ve CORS Ayarları",
+            "description": "N8N workflow response'unu validate et ve gerekli CORS ayarlarını yap",
+            "dependencies": [
+              "6.4"
+            ],
+            "details": "N8N webhook'undan gelen response'u parse et ve { 'upload': 'success' } formatını kontrol et. Response validation başarısızsa uygun error message döndür. CORS headers'ları ekle (Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers). OPTIONS method'u için preflight request handling ekle. Başarılı upload durumunda client'a success response döndür.",
+            "status": "done",
+            "testStrategy": "N8N response formatının doğru validate edildiğini ve CORS ayarlarının çalıştığını test et"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Veri Çekme ve SWR Entegrasyonu",
+        "description": "Supabase'den fiş verilerini çekmek için SWR ile veri yönetimi sisteminin kurulması",
+        "details": "SWR paketini yükle. lib/api.ts'de Supabase sorguları: getFisler (sayfalama, filtreleme, arama), getFisById, getStatistics. hooks/useFisler.ts, hooks/useStatistics.ts custom hook'ları oluştur. Filtreleme parametreleri: tarih aralığı, fiş no, min/max tutar. Arama: fiş no, ürün adı, açıklama alanlarında. Sayfalama: 20 kayıt/sayfa. SWR cache invalidation için mutate fonksiyonunu export et.",
+        "testStrategy": "Veri çekme işlemlerinin doğru çalışması, filtreleme ve arama fonksiyonlarının test edilmesi, cache invalidation'ın webhook sonrası çalışması",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          6
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "SWR Paket Kurulumu ve Temel Konfigürasyon",
+            "description": "SWR paketinin projeye eklenmesi ve temel konfigürasyonun yapılması",
+            "dependencies": [],
+            "details": "npm install swr komutu ile SWR paketini yükle. app/layout.tsx dosyasında SWRConfig provider'ını ekle. Temel SWR konfigürasyonu: refreshInterval: 0, revalidateOnFocus: false, revalidateOnReconnect: true. Error handling için global error handler tanımla. TypeScript için SWR tiplerini import et.",
+            "status": "done",
+            "testStrategy": "SWR provider'ının doğru çalıştığını kontrol et, temel konfigürasyon ayarlarının uygulandığını doğrula"
+          },
+          {
+            "id": 2,
+            "title": "Supabase API Fonksiyonlarının Oluşturulması",
+            "description": "lib/api.ts dosyasında Supabase sorguları için temel API fonksiyonlarının yazılması",
+            "dependencies": [
+              "7.1"
+            ],
+            "details": "lib/api.ts dosyası oluştur. getFisler fonksiyonu: sayfalama (page, limit=20), filtreleme (tarih aralığı, fiş no, min/max tutar), arama (fiş no, ürün adı, açıklama) parametreleri ile Supabase sorgusu. getFisById fonksiyonu: tek fiş detayı çekme. getStatistics fonksiyonu: toplam fiş sayısı, toplam tutar, ortalama tutar hesaplama. Her fonksiyon için TypeScript interface'leri tanımla. Error handling ve response formatı standardize et.",
+            "status": "done",
+            "testStrategy": "Her API fonksiyonunu farklı parametrelerle test et, hata durumlarını kontrol et, dönen veri formatının doğruluğunu doğrula"
+          },
+          {
+            "id": 3,
+            "title": "Fiş Listesi için Custom Hook Oluşturma",
+            "description": "hooks/useFisler.ts dosyasında fiş verilerini yönetmek için custom hook'un yazılması",
+            "dependencies": [
+              "7.2"
+            ],
+            "details": "hooks/useFisler.ts dosyası oluştur. useFisler hook'u: sayfa, filtreleme ve arama parametrelerini alacak. SWR ile getFisler API fonksiyonunu çağır. Key generation: parametrelere göre unique cache key oluştur. Loading, error, data state'lerini return et. Filtreleme parametreleri için TypeScript interface tanımla. useSWRMutation ile mutate fonksiyonunu export et. Infinite loading için useSWRInfinite alternatifi hazırla.",
+            "status": "done",
+            "testStrategy": "Hook'un farklı parametrelerle çalışması, cache key'lerin doğru oluşması, loading ve error state'lerinin doğru çalışması"
+          },
+          {
+            "id": 4,
+            "title": "İstatistik Verileri için Custom Hook Oluşturma",
+            "description": "hooks/useStatistics.ts dosyasında istatistik verilerini yönetmek için custom hook'un yazılması",
+            "dependencies": [
+              "7.2"
+            ],
+            "details": "hooks/useStatistics.ts dosyası oluştur. useStatistics hook'u: SWR ile getStatistics API fonksiyonunu çağır. Cache key: 'statistics' olarak sabit. RefreshInterval: 5 dakika (300000ms) ayarla. İstatistik verileri için TypeScript interface tanımla: toplam fiş sayısı, toplam tutar, ortalama tutar, günlük/aylık trend verileri. Loading ve error state'lerini handle et. Mutate fonksiyonunu export et.",
+            "status": "done",
+            "testStrategy": "İstatistik verilerinin doğru çekilmesi, cache'in çalışması, refresh interval'ın doğru çalışması"
+          },
+          {
+            "id": 5,
+            "title": "Cache Invalidation ve Mutate Sistem Entegrasyonu",
+            "description": "SWR cache invalidation sisteminin kurulması ve mutate fonksiyonlarının export edilmesi",
+            "dependencies": [
+              "7.3",
+              "7.4"
+            ],
+            "details": "lib/swr-utils.ts dosyası oluştur. Global mutate fonksiyonlarını export et: mutateFisler, mutateStatistics. Cache key pattern'leri tanımla. invalidateAll fonksiyonu: tüm cache'i temizlemek için. invalidateFisler fonksiyonu: fiş listesi cache'ini temizlemek için. Upload sonrası otomatik cache invalidation için helper fonksiyonlar. useSWRConfig hook'undan mutate fonksiyonunu kullan. TypeScript için cache key tiplerini tanımla.",
+            "status": "done",
+            "testStrategy": "Cache invalidation'ın doğru çalışması, upload sonrası listenin güncellenmesi, mutate fonksiyonlarının doğru çalışması"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Filtre Paneli Bileşeni",
+        "description": "Sol sütunda yer alacak filtreleme formunun geliştirilmesi",
+        "details": "components/FilterPanel.tsx oluştur: rounded-2xl border bg-white p-4 kart içinde form. Alanlar: başlangıç/bitiş tarihi (date input), fiş no (text input), min/max tutar (number input). React Hook Form kullan, zod validation schema. Butonlar: 'Filtrele' (btn-primary), 'Sıfırla' (btn-ghost). Form state'i URL query params ile senkronize et. Debounce 300ms arama için. Erişilebilirlik: label-input bağlantıları, aria-invalid, hata mesajları.",
+        "testStrategy": "Form validasyonu, URL query params senkronizasyonu, debounce işlevi, buton durumları ve erişilebilirlik özelliklerinin test edilmesi",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Zod Validation Schema ve TypeScript Tiplerinin Oluşturulması",
+            "description": "Filtre formu için gerekli validation schema ve TypeScript tiplerinin tanımlanması",
+            "dependencies": [],
+            "details": "lib/validations/filter.ts dosyası oluştur. Zod schema tanımla: startDate (optional date), endDate (optional date), fisNo (optional string), minAmount (optional number, min 0), maxAmount (optional number, min 0). Schema'dan TypeScript tiplerini çıkar (FilterFormData). Tarih validasyonu: başlangıç tarihi bitiş tarihinden büyük olamaz. Tutar validasyonu: min tutar max tutardan büyük olamaz.",
+            "status": "done",
+            "testStrategy": "Zod schema validasyonlarının doğru çalıştığını, geçersiz veri girişlerinde hata mesajlarının döndüğünü test et"
+          },
+          {
+            "id": 2,
+            "title": "Temel FilterPanel Bileşeni ve Form Yapısının Oluşturulması",
+            "description": "React Hook Form ile temel form yapısının ve UI kartının oluşturulması",
+            "dependencies": [
+              "8.1"
+            ],
+            "details": "components/FilterPanel.tsx oluştur. React Hook Form useForm hook'u ile form setup yap, zod resolver kullan. Kart yapısı: rounded-2xl border bg-white p-4 sınıfları. Form alanları: başlangıç/bitiş tarihi (date input), fiş no (text input), min/max tutar (number input). Her alan için label-input bağlantıları kur, htmlFor ve id kullan. Temel form layout'u grid veya flex ile düzenle.",
+            "status": "done",
+            "testStrategy": "Form render'ının doğru olduğunu, input alanlarının label'larla bağlantılı olduğunu ve temel form state'inin çalıştığını test et"
+          },
+          {
+            "id": 3,
+            "title": "Form Butonları ve Validation Mesajlarının Eklenmesi",
+            "description": "Filtrele ve Sıfırla butonlarının eklenmesi, hata mesajlarının gösterilmesi",
+            "dependencies": [
+              "8.2"
+            ],
+            "details": "Form alt kısmına buton grubu ekle: 'Filtrele' butonu (btn-primary sınıfı), 'Sıfırla' butonu (btn-ghost sınıfı). React Hook Form'un formState.errors kullanarak hata mesajlarını göster. Aria-invalid attribute'larını hatalı alanlara ekle. Hata mesajları kırmızı renkte, alan altında gösterilsin. Sıfırla butonu form.reset() çağırsın.\n<info added on 2025-08-13T14:39:17.535Z>\nGörev tamamlandı: Form butonları başarıyla eklendi ve validation sistemi geliştirildi. Filtrele butonu loading durumu ve form gönderimi ile birlikte primary mavi renkte uygulandı. Sıfırla butonu akıllı değişiklik algılama özelliği ile ghost stilinde eklendi. Validation hata gösterimi Türkçe alan adları ile geliştirildi. Aria-invalid attribute'ları ile erişilebilirlik iyileştirildi. Tüm lint ve tip kontrolleri başarıyla geçiyor. Form butonları doğru durum yönetimi ve kullanıcı deneyimi ile çalışıyor.\n</info added on 2025-08-13T14:39:17.535Z>",
+            "status": "done",
+            "testStrategy": "Buton işlevselliğini, validation hata mesajlarının görünümünü, aria-invalid attribute'larının doğru çalıştığını test et"
+          },
+          {
+            "id": 4,
+            "title": "URL Query Parameters Senkronizasyonu",
+            "description": "Form state'inin URL query parameters ile senkronize edilmesi",
+            "dependencies": [
+              "8.3"
+            ],
+            "details": "useSearchParams ve useRouter hook'larını kullan. Form değerleri değiştiğinde URL query params'ı güncelle. Sayfa yüklendiğinde URL'den mevcut filtreleri form'a yükle. URLSearchParams kullanarak query string'i yönet. Tarih değerlerini ISO string formatında URL'de sakla. Boş değerleri URL'den temizle.\n<info added on 2025-08-13T14:40:49.321Z>\nNext.js navigation hook'ları (useSearchParams, useRouter, usePathname) entegre edildi. filterToUrlQuery ve urlQueryToFilter yardımcı fonksiyonları ile form-URL senkronizasyonu sağlandı. Bileşen mount edildiğinde URL parametrelerinden form başlatması yapılıyor. syncWithUrl prop'u ile isteğe bağlı URL senkronizasyonu kontrolü eklendi. Form gönderiminde router.replace ile URL güncelleniyor. Form sıfırlamada URL temizleniyor. scroll:false seçeneği ile scroll pozisyonu korunuyor. Tüm lint ve TypeScript kontrolleri geçiyor. Form durumu artık yer imlenebilir filtreler için tarayıcı URL'si ile düzgün senkronize oluyor.\n</info added on 2025-08-13T14:40:49.321Z>",
+            "status": "done",
+            "testStrategy": "URL'deki query parametrelerinin form state'i ile senkronize olduğunu, sayfa yenileme sonrası filtrelerin korunduğunu test et"
+          },
+          {
+            "id": 5,
+            "title": "Debounce Arama Özelliğinin Implementasyonu",
+            "description": "300ms debounce ile arama işlevselliğinin eklenmesi ve final optimizasyonlar",
+            "dependencies": [
+              "8.4"
+            ],
+            "details": "useDebounce custom hook'u oluştur veya lodash.debounce kullan. Form değerleri değiştiğinde 300ms bekleyip arama yap. useEffect ile form watch'lama ve debounced callback. Loading state'i ekle, arama sırasında butonları disable et. Erişilebilirlik: screen reader'lar için aria-live region ekle, arama durumu bildirimleri. Performance: gereksiz re-render'ları önle.\n<info added on 2025-08-13T14:44:08.928Z>\nGörev 8.5 Tamamlandı: Debounce Arama Implementasyonu\n\nTypeScript generics ile özel useDebounce hook'u oluşturuldu. 300ms debounced otomatik arama işlevselliği implement edildi. Callback debouncing için useDebouncedCallback hook'u eklendi. Arama-spesifik debouncing için useDebouncedSearch hook'u geliştirildi. FilterPanel form değişikliklerinde otomatik arama ile geliştirildi. Görsel arama göstergeleri ve loading state'leri eklendi. Erişilebilirlik özellikleri implement edildi (aria-live bölgeleri, screen reader duyuruları). Header ve butonlarda arama progress göstergeleri eklendi. Debounce gecikme bilgisi ile otomatik arama bildirimi eklendi. Gereksiz re-render'ları önlemek için performans optimizasyonları yapıldı. Tüm lint ve TypeScript kontrolleri başarılı. Filtre paneli artık uygun UX geri bildirimi ile sorunsuz gerçek zamanlı arama deneyimi sunuyor.\n</info added on 2025-08-13T14:44:08.928Z>",
+            "status": "done",
+            "testStrategy": "Debounce işlevinin doğru çalıştığını, 300ms gecikme ile arama yapıldığını, loading state'lerinin uygun şekilde gösterildiğini test et"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Fiş Listesi Bileşeni",
+        "description": "Sağ sütunda yer alacak fiş kayıtları listesinin geliştirilmesi",
+        "details": "components/FisList.tsx oluştur: üst kısımda arama inputu (debounce 300ms), alt kısımda kart listesi. Kart tasarımı: rounded-xl border p-4 bg-white hover:shadow-md. Üst satır: 'Fiş #0001' (sol), 'Tutar: 10,42 TL' (sağ, font-semibold). Alt satır: tarih-saat, 'N ürün', 'Detay Gör' butonu. Sayfalama: Prev/Next butonları. Boş durum: illüstrasyon + metin. Loading: 5 satır skeleton (animate-pulse). Para formatı: tr-TR locale, virgül ondalık ayırıcı.",
+        "testStrategy": "Liste görünümü, arama işlevi, sayfalama, boş durum, loading state, para formatlaması ve responsive tasarımın test edilmesi",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          8
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Arama Input Bileşeni Geliştirme",
+            "description": "Fiş listesi üst kısmında yer alacak debounce özellikli arama input bileşeninin oluşturulması",
+            "dependencies": [],
+            "details": "components/FisList.tsx dosyasını oluştur ve içinde arama input bileşenini geliştir. useState ile arama terimi state'ini yönet. useEffect ve setTimeout kullanarak 300ms debounce işlevi ekle. Input tasarımı: border rounded-lg px-3 py-2, placeholder 'Fiş ara...', search icon (lucide-react). onChange event'inde debounce logic'i uygula. Arama terimi değiştiğinde parent component'e callback ile bildir.",
+            "status": "done",
+            "testStrategy": "Arama input'una yazılan metinlerin 300ms gecikme ile işlendiğini, placeholder metninin doğru göründüğünü ve search icon'unun yerinde olduğunu test et"
+          },
+          {
+            "id": 2,
+            "title": "Fiş Kartı Bileşeni Tasarımı",
+            "description": "Her bir fiş kaydı için kullanılacak kart bileşeninin tasarım ve yapısının oluşturulması",
+            "dependencies": [
+              "9.1"
+            ],
+            "details": "FisCard alt bileşenini oluştur. Kart tasarımı: rounded-xl border p-4 bg-white hover:shadow-md transition-shadow. Üst satır: sol tarafta 'Fiş #0001' formatında fiş numarası, sağ tarafta 'Tutar: 10,42 TL' formatında tutar (font-semibold). Alt satır: tarih-saat (date-fns ile formatla), 'N ürün' metni, 'Detay Gör' butonu (btn-sm btn-outline). Para formatı için tr-TR locale kullan, virgül ondalık ayırıcı. Props interface tanımla: fisNo, tutar, tarihSaat, urunSayisi, onDetayGor.",
+            "status": "done",
+            "testStrategy": "Kart tasarımının doğru görüntülendiğini, hover efektinin çalıştığını, para formatının tr-TR locale'e uygun olduğunu ve butonların tıklanabilir olduğunu test et"
+          },
+          {
+            "id": 3,
+            "title": "Liste Render ve State Yönetimi",
+            "description": "Fiş kartlarının listelenmesi ve bileşen state yönetiminin implementasyonu",
+            "dependencies": [
+              "9.2"
+            ],
+            "details": "FisList ana bileşeninde fiş verilerini yönetmek için useState kullan. Mock veri array'i oluştur (en az 10 fiş kaydı). Arama filtrelemesi için useMemo hook'u kullan. Filtrelenmiş verileri FisCard bileşenlerine map ile render et. Loading state için isLoading boolean state'i ekle. Error handling için error state'i yönet. Arama terimi değiştiğinde filtreleme işlemini gerçekleştir. Key prop'u olarak fiş ID'sini kullan.",
+            "status": "done",
+            "testStrategy": "Mock verilerin doğru listendiğini, arama filtrelemesinin çalıştığını, loading ve error state'lerinin doğru yönetildiğini test et"
+          },
+          {
+            "id": 4,
+            "title": "Sayfalama ve Navigasyon",
+            "description": "Liste alt kısmında yer alacak sayfalama kontrollerinin geliştirilmesi",
+            "dependencies": [
+              "9.3"
+            ],
+            "details": "Sayfalama için useState ile currentPage ve itemsPerPage (varsayılan 10) state'lerini yönet. Toplam sayfa sayısını hesapla (Math.ceil(totalItems / itemsPerPage)). Prev/Next butonları oluştur: disabled state'leri ile (ilk/son sayfa kontrolü). Buton tasarımı: btn-sm, prev için ChevronLeft icon, next için ChevronRight icon. Sayfa değiştiğinde görünür verileri slice ile güncelle. Sayfa numarası göstergesi ekle: 'Sayfa X / Y' formatında. useMemo ile sayfalanmış verileri optimize et.",
+            "status": "done",
+            "testStrategy": "Sayfalama butonlarının doğru çalıştığını, disabled state'lerin uygun zamanlarda aktif olduğunu, sayfa numarası göstergesinin doğru olduğunu test et"
+          },
+          {
+            "id": 5,
+            "title": "Loading ve Boş Durum Bileşenleri",
+            "description": "Yükleme durumu skeleton'ları ve boş liste durumu için UI bileşenlerinin oluşturulması",
+            "dependencies": [
+              "9.4"
+            ],
+            "details": "Loading durumu için FisCardSkeleton bileşeni oluştur: 5 adet skeleton kartı, animate-pulse efekti, rounded-xl border p-4 bg-gray-100. İçinde div'ler ile fiş kartı yapısını taklit et (üst satır 2 div, alt satır 3 div). Boş durum için EmptyState bileşeni: merkezi hizalama, illüstrasyon (büyük search icon), 'Fiş bulunamadı' başlığı, 'Arama kriterlerinizi değiştirmeyi deneyin' alt metni. Conditional rendering ile loading, empty ve normal durumları yönet. CSS classes: text-center, text-gray-500, space-y-4.",
+            "status": "done",
+            "testStrategy": "Loading skeleton'larının 5 adet göründüğünü, animate-pulse efektinin çalıştığını, boş durum bileşeninin uygun zamanlarda göründüğünü ve tasarımının merkezi hizalandığını test et"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Ana Sayfa Entegrasyonu",
+        "description": "Tüm bileşenlerin ana sayfada bir araya getirilmesi ve layout düzenlemesi",
+        "details": "app/page.tsx'de ana sayfa layout'u: üst kısımda istatistik kartları (5'li grid), orta kısımda dosya yükleme bileşeni (max-w-xl mx-auto), alt kısımda 2 sütunlu grid (md:grid-cols-4, sol 1 sütun filtre, sağ 3 sütun liste). SWR ile veri çekme, upload sonrası mutate ile liste güncelleme. Toast mesajları: başarı/hata durumları. Responsive breakpoint'ler: sm, md, lg. Container: max-w-7xl mx-auto px-4.",
+        "testStrategy": "Tüm bileşenlerin doğru yerleşimi, responsive davranış, veri akışı, upload-liste senkronizasyonu ve toast mesajlarının test edilmesi",
+        "priority": "high",
+        "dependencies": [
+          4,
+          5,
+          8,
+          9
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Ana Sayfa Layout Yapısının Oluşturulması",
+            "description": "app/page.tsx dosyasında ana sayfa için temel layout yapısının kurulması ve responsive container ayarlarının yapılması",
+            "dependencies": [],
+            "details": "app/page.tsx dosyasını oluştur. Ana container için max-w-7xl mx-auto px-4 sınıflarını kullan. Sayfa yapısını 3 ana bölüme ayır: üst kısım (istatistik kartları), orta kısım (dosya yükleme), alt kısım (filtre ve liste). Her bölüm için uygun spacing (space-y-6) ve responsive breakpoint'leri (sm, md, lg) tanımla. Layout için flex flex-col min-h-screen yapısını kullan.",
+            "status": "done",
+            "testStrategy": "Layout'un responsive davranışını farklı ekran boyutlarında test et, container genişliklerinin doğru çalıştığını kontrol et"
+          },
+          {
+            "id": 2,
+            "title": "İstatistik Kartları Grid Entegrasyonu",
+            "description": "Üst kısımda 5'li grid yapısında istatistik kartlarının yerleştirilmesi ve responsive davranışının sağlanması",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "StatCard bileşenini import et. Grid container için grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 sınıflarını kullan. 5 adet StatCard bileşenini yerleştir: toplam kayıt, toplam tutar, toplam KDV, bugünkü kayıtlar, ortalama tutar. Her kart için uygun ikon ve değer prop'larını geç. useStatistics hook'unu kullanarak gerçek verileri bağla.",
+            "status": "done",
+            "testStrategy": "Grid'in responsive davranışını test et, kartların doğru sıralanmasını ve hover efektlerini kontrol et"
+          },
+          {
+            "id": 3,
+            "title": "Dosya Yükleme Bileşeni Entegrasyonu",
+            "description": "Orta kısımda dosya yükleme bileşeninin yerleştirilmesi ve upload sonrası veri güncelleme mekanizmasının kurulması",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "FileUpload bileşenini import et. Orta kısımda max-w-xl mx-auto container içinde yerleştir. Upload başarılı olduğunda SWR mutate fonksiyonunu çağırarak fiş listesini ve istatistikleri güncelle. Toast mesajları için react-hot-toast kullan: başarılı upload için yeşil toast, hata durumları için kırmızı toast. Upload sırasında loading state'ini göster.",
+            "status": "done",
+            "testStrategy": "Dosya yükleme işleminin çalışmasını, upload sonrası liste güncellemesini ve toast mesajlarının doğru görüntülenmesini test et"
+          },
+          {
+            "id": 4,
+            "title": "Filtre ve Liste Grid Yapısının Kurulması",
+            "description": "Alt kısımda 2 sütunlu grid yapısının oluşturulması ve filtre ile liste bileşenlerinin yerleştirilmesi",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "Alt kısım için grid md:grid-cols-4 gap-6 yapısını oluştur. Sol tarafta 1 sütun (md:col-span-1) için FisFilter bileşenini yerleştir. Sağ tarafta 3 sütun (md:col-span-3) için FisList bileşenini yerleştir. Mobile'da tek sütun (grid-cols-1) olacak şekilde responsive ayarla. Filtre ve liste arasında veri paylaşımı için state management kur.",
+            "status": "done",
+            "testStrategy": "Grid yapısının responsive davranışını test et, filtre ve liste bileşenlerinin doğru yerleşimini kontrol et"
+          },
+          {
+            "id": 5,
+            "title": "SWR Veri Yönetimi ve Toast Sistemi Entegrasyonu",
+            "description": "Tüm bileşenler arası veri akışının SWR ile yönetilmesi ve toast mesaj sisteminin entegrasyonu",
+            "dependencies": [
+              "10.2",
+              "10.3",
+              "10.4"
+            ],
+            "details": "useFisler ve useStatistics hook'larını ana sayfada kullan. SWR mutate fonksiyonlarını tüm bileşenlere prop olarak geç. Toaster bileşenini layout'a ekle. Error boundary ekleyerek hata durumlarını yakala ve toast ile göster. Loading state'leri için Skeleton bileşenlerini kullan. Veri yenileme için refresh butonu ekle.",
+            "status": "done",
+            "testStrategy": "Veri akışının doğru çalışmasını, mutate işlemlerinin liste ve istatistikleri güncellemesini, toast mesajlarının uygun zamanlarda görüntülenmesini test et"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Detay Sayfası",
+        "description": "Fiş detaylarını gösteren ayrı sayfanın geliştirilmesi",
+        "details": "app/fis/[id]/page.tsx oluştur: breadcrumb navigasyon, header kart (fiş no + tarih), 3'lü bilgi kartları grid (fiş bilgileri, tarih bilgileri, toplam bilgiler - yeşil arka plan). Ürün tablosu: sütunlar (ürün adı, miktar, birim fiyat, KDV, toplam), responsive overflow-x-auto. Alt özet: sol tarafta son güncelleme, sağ tarafta toplam ürün/genel toplam. Para formatı tr-TR, tarih formatı date-fns tr locale. Loading ve error state'leri.",
+        "testStrategy": "Detay sayfası routing'i, veri görünümü, tablo responsive davranışı, para/tarih formatlaması ve error handling'in test edilmesi",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          10
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Detay Sayfası Temel Yapısı ve Routing",
+            "description": "app/fis/[id]/page.tsx dosyasını oluştur ve temel sayfa yapısını kur",
+            "dependencies": [],
+            "details": "app/fis/[id]/page.tsx dosyasını oluştur. Dynamic routing için params'dan id'yi al. Temel sayfa container'ını kur (max-w-7xl mx-auto px-4). Loading ve error state'leri için useState hook'larını ekle. Supabase'den fiş detaylarını çekmek için useEffect hook'u kur. Breadcrumb navigasyon bileşenini ekle (Ana Sayfa > Fişler > Fiş Detayı formatında).\n<info added on 2025-08-13T14:57:43.916Z>\nDetay sayfası temel yapısı başarıyla tamamlandı. app/fis/[id]/page.tsx dosyası oluşturuldu ve dynamic routing implementasyonu yapıldı. Temel sayfa container'ı (max-w-7xl mx-auto px-4) kuruldu. Loading, error ve success state'leri için useState hook'ları eklendi. getFisById API fonksiyonu kullanılarak Supabase'den veri çekme işlemi implementasyonu tamamlandı. Breadcrumb navigation ve geri dön butonu eklendi. Temel fiş bilgilerini gösteren card yapısı hazırlandı. ArrowLeft, FileText ve Receipt icon'ları icons.ts dosyasına eklendi. Responsive grid layout ile fiş bilgileri gösteriliyor. useRouter hook'u ile navigation, Supabase Fis tipini kullanarak type safety, ApiResponse pattern ile error handling, toast notifications ve conditional rendering implementasyonu yapıldı. Turkish locale formatting for dates eklendi.\n</info added on 2025-08-13T14:57:43.916Z>",
+            "status": "done",
+            "testStrategy": "Dynamic routing'in çalışması, sayfa yüklenme durumları ve breadcrumb navigasyonunun doğru görünümü test edilecek"
+          },
+          {
+            "id": 2,
+            "title": "Header Kart ve Bilgi Kartları Grid",
+            "description": "Fiş numarası ve tarih bilgilerini gösteren header kart ile 3'lü bilgi kartları grid'ini oluştur",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "Header kart: bg-white rounded-lg shadow-sm p-6, fiş numarası ve tarih bilgilerini göster. 3'lü bilgi kartları grid: grid-cols-1 md:grid-cols-3 gap-4. Fiş bilgileri kartı (müşteri, kategori vb.), tarih bilgileri kartı (oluşturma, güncelleme tarihleri), toplam bilgiler kartı (yeşil arka plan bg-green-50 border-green-200). Her kart için rounded-lg border bg-white p-4 shadow-sm stilleri kullan. date-fns ile tr locale kullanarak tarih formatlaması yap.\n<info added on 2025-08-13T14:59:31.234Z>\nHeader kart ve bilgi kartları grid'i tamamlandı:\n\n**Implementasyon Detayları:**\n- Header kart oluşturuldu: bg-white rounded-lg shadow-sm p-6 stilleri ile\n- Fiş numarası ve tarih bilgilerini gösteriyor\n- Receipt icon'u ve toplam tutar bilgisi eklendi\n- 3'lü bilgi kartları grid'i implementasyonu yapıldı: grid-cols-1 md:grid-cols-3 gap-4\n\n**Kart Detayları:**\n1. **Temel Bilgiler Kartı:** \n   - Info icon'u ile mavi tema (bg-blue-100)\n   - ID ve Fiş No bilgilerini gösteriyor\n   \n2. **Tarih Bilgileri Kartı:**\n   - Clock icon'u ile mor tema (bg-purple-100)\n   - Fiş tarihi, oluşturulma ve güncellenme tarihlerini gösteriyor\n   - Turkish locale formatting uygulandı\n   \n3. **Mali Bilgiler Kartı:**\n   - DollarSign icon'u ile yeşil tema (bg-green-50 border-green-200)\n   - Toplam tutar, toplam KDV ve KDV hariç tutar hesaplaması\n   - Özel yeşil arka plan ve border ile vurgulandı\n\n**Teknik Özellikler:**\n- Responsive design: Mobile'da tek sütun, desktop'ta 3 sütun\n- Icon'lar (Calendar, Clock, DollarSign, Info) icons.ts'e eklendi\n- Conditional rendering ile boş field'ları gizleme\n- Turkish locale ile tarih formatlaması\n- Proper typography ve spacing\n- Shadow ve border efektleri\n\nSonraki subtask: Product table component implementasyonu\n</info added on 2025-08-13T14:59:31.234Z>",
+            "status": "done",
+            "testStrategy": "Kartların responsive davranışı, tarih formatlamasının doğruluğu ve yeşil arka planlı toplam kartının görünümü test edilecek"
+          },
+          {
+            "id": 3,
+            "title": "Ürün Tablosu Bileşeni",
+            "description": "Ürün detaylarını gösteren responsive tablo bileşenini oluştur",
+            "dependencies": [
+              "11.2"
+            ],
+            "details": "Ürün tablosu: overflow-x-auto ile responsive wrapper. Tablo sütunları: Ürün Adı, Miktar, Birim Fiyat, KDV, Toplam. Table stilleri: bg-white rounded-lg shadow-sm overflow-hidden. Header: bg-gray-50 font-medium text-gray-900. Satırlar: hover:bg-gray-50 border-b border-gray-200. Para değerleri için Intl.NumberFormat ile tr-TR locale kullan. Miktar ve KDV değerleri için uygun formatlamalar yap.",
+            "status": "done",
+            "testStrategy": "Tablonun responsive davranışı, horizontal scroll'un çalışması, para formatlamasının doğruluğu ve hover efektlerinin test edilmesi"
+          },
+          {
+            "id": 4,
+            "title": "Alt Özet Bölümü",
+            "description": "Son güncelleme bilgisi ve toplam özet bilgilerini gösteren alt bölümü oluştur",
+            "dependencies": [
+              "11.3"
+            ],
+            "details": "Alt özet bölümü: flex justify-between items-center bg-gray-50 rounded-lg p-4 mt-6. Sol taraf: son güncelleme tarihi (text-sm text-gray-600, date-fns tr locale ile formatla). Sağ taraf: toplam ürün sayısı ve genel toplam (font-medium text-gray-900). Genel toplam için büyük font boyutu (text-lg) ve para formatlaması kullan. Mobile'da flex-col ile dikey hizalama yap.",
+            "status": "done",
+            "testStrategy": "Alt özet bölümünün responsive davranışı, tarih ve para formatlamasının doğruluğu, mobile görünümde dikey hizalamanın test edilmesi"
+          },
+          {
+            "id": 5,
+            "title": "Loading ve Error State Yönetimi",
+            "description": "Sayfa için loading spinner ve error handling durumlarını implement et",
+            "dependencies": [
+              "11.1",
+              "11.2",
+              "11.3",
+              "11.4"
+            ],
+            "details": "Loading state: sayfa merkezi loading spinner (animate-spin), skeleton loader'lar için placeholder kartlar. Error state: hata mesajı kartı (bg-red-50 border-red-200 text-red-800), 'Tekrar Dene' butonu ile retry fonksiyonalitesi. 404 durumu için 'Fiş bulunamadı' mesajı. Try-catch blokları ile API hatalarını yakala. Toast mesajları ile kullanıcı bilgilendirmesi yap. Loading sırasında tüm bileşenlerin skeleton versiyonlarını göster.",
+            "status": "done",
+            "testStrategy": "Loading durumlarının görünümü, error handling'in çalışması, 404 durumunun doğru yönetimi ve toast mesajlarının görünümünün test edilmesi"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "UI Bileşenleri ve Son Dokunuşlar",
+        "description": "Ortak UI bileşenlerinin oluşturulması ve erişilebilirlik iyileştirmeleri",
+        "details": "components/ui/ klasöründe: Button.tsx (primary, ghost, danger varyantları), Input.tsx, Alert.tsx, Badge.tsx, Skeleton.tsx, EmptyState.tsx bileşenlerini oluştur. Tailwind CSS custom stilleri: focus-visible ring'ler, hover efektleri, transition'lar. Erişilebilirlik: ARIA etiketleri, klavye navigasyonu, renk kontrastı WCAG AA uyumluluğu. Dark mode desteği (opsiyonel). Performance optimizasyonu: lazy loading, image optimization.",
+        "testStrategy": "UI bileşenlerinin tutarlılığı, erişilebilirlik standartları, klavye navigasyonu, renk kontrastı ve performance metriklerin test edilmesi",
+        "priority": "low",
+        "dependencies": [
+          11
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Temel UI Bileşenlerinin Oluşturulması",
+            "description": "Button, Input, Alert, Badge, Skeleton ve EmptyState bileşenlerinin temel yapılarının oluşturulması",
+            "dependencies": [],
+            "details": "components/ui/ klasöründe temel bileşenleri oluştur: Button.tsx (primary, ghost, danger varyantları ile), Input.tsx (text, email, password tipleri), Alert.tsx (success, error, warning, info varyantları), Badge.tsx (default, success, warning, error stilleri), Skeleton.tsx (farklı boyutlar için), EmptyState.tsx (ikon ve mesaj ile). Her bileşen için TypeScript interface'leri tanımla ve forwardRef kullan.",
+            "status": "done",
+            "testStrategy": "Her bileşenin farklı varyantlarının doğru render edilmesi, prop'ların doğru çalışması ve TypeScript tiplerinin kontrolü"
+          },
+          {
+            "id": 2,
+            "title": "Tailwind CSS Custom Stillerinin Eklenmesi",
+            "description": "Focus-visible ring'ler, hover efektleri ve transition'lar için custom Tailwind stilleri",
+            "dependencies": [
+              "12.1"
+            ],
+            "details": "tailwind.config.js'de custom renkler ve animasyonlar tanımla. Focus-visible için ring-2 ring-blue-500 ring-offset-2 stilleri, hover efektleri için transform ve scale animasyonları, transition'lar için duration-200 ease-in-out. Button bileşenlerinde hover:scale-105, focus-visible:ring-2 stilleri uygula. Input bileşenlerinde focus:border-blue-500 focus:ring-1 focus:ring-blue-500 stilleri ekle.",
+            "status": "done",
+            "testStrategy": "Hover ve focus durumlarının görsel kontrolü, transition animasyonlarının akıcılığı ve farklı tarayıcılarda uyumluluğun test edilmesi"
+          },
+          {
+            "id": 3,
+            "title": "Erişilebilirlik Özelliklerinin Implementasyonu",
+            "description": "ARIA etiketleri, klavye navigasyonu ve WCAG AA uyumlu renk kontrastının sağlanması",
+            "dependencies": [
+              "12.1",
+              "12.2"
+            ],
+            "details": "Tüm bileşenlere uygun ARIA etiketleri ekle: aria-label, aria-describedby, role. Button bileşenlerinde klavye desteği (Enter, Space), Input bileşenlerinde aria-invalid ve aria-describedby. Alert bileşenlerinde role='alert' veya role='status'. Renk kontrastını WCAG AA standardına uygun hale getir (4.5:1 oranı). Screen reader uyumluluğu için sr-only sınıfları kullan.",
+            "status": "done",
+            "testStrategy": "Klavye navigasyonu testi, screen reader uyumluluğu, renk kontrast oranlarının ölçülmesi ve WAVE accessibility checker ile doğrulama"
+          },
+          {
+            "id": 4,
+            "title": "Dark Mode Desteğinin Eklenmesi",
+            "description": "Tüm UI bileşenleri için dark mode varyantlarının oluşturulması",
+            "dependencies": [
+              "12.1",
+              "12.2",
+              "12.3"
+            ],
+            "details": "tailwind.config.js'de darkMode: 'class' ayarını yap. Tüm bileşenlerde dark: prefix'i ile dark mode stilleri ekle. Button için dark:bg-gray-800 dark:text-white, Input için dark:bg-gray-900 dark:border-gray-700, Alert için dark mode renk varyantları. Context API ile theme state yönetimi oluştur. ThemeProvider bileşeni ve useTheme hook'u implement et. Toggle button ile tema değiştirme özelliği ekle.",
+            "status": "done",
+            "testStrategy": "Light ve dark mode arasında geçiş testi, tüm bileşenlerin her iki temada doğru görünümü ve tema tercihinin localStorage'da saklanması"
+          },
+          {
+            "id": 5,
+            "title": "Performance Optimizasyonu ve Final Testler",
+            "description": "Lazy loading, image optimization ve genel performance iyileştirmelerinin uygulanması",
+            "dependencies": [
+              "12.1",
+              "12.2",
+              "12.3",
+              "12.4"
+            ],
+            "details": "React.lazy() ile bileşenlerin lazy loading'ini implement et. next/image kullanarak image optimization sağla. Bundle analyzer ile gereksiz import'ları tespit et ve tree-shaking optimizasyonu yap. Skeleton bileşenlerini loading state'lerde kullan. useMemo ve useCallback hook'larını uygun yerlerde kullan. Lighthouse performance skorunu 90+ seviyesine çıkar.",
+            "status": "done",
+            "testStrategy": "Lighthouse performance audit, bundle size analizi, lazy loading'in doğru çalışması, image optimization kontrolü ve genel kullanıcı deneyimi testleri"
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-13T12:16:04.304Z",
+      "updated": "2025-08-13T15:09:44.999Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

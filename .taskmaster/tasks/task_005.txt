@@ -1,0 +1,76 @@
+# Task ID: 5
+# Title: Dosya Yükleme (Dropzone) Bileşeni
+# Status: done
+# Dependencies: 3
+# Priority: high
+# Description: Fiş/fatura görsellerini yüklemek için drag-drop destekli dosya yükleme bileşeninin geliştirilmesi
+# Details:
+components/FileUpload.tsx oluştur: drag-drop desteği, JPG/JPEG/PNG formatları, max 10MB boyut kontrolü. Durumlar: idle (border-dashed border-gray-300), drag-over (border-blue-400 bg-blue-50), uploading (progress bar), success/error. ImagePlus ikonu kullan. AbortController ile iptal desteği. Erişilebilirlik: role='button', aria-label, klavye desteği (Enter/Space). Progress bar için h-2 rounded bg-blue-600 stil. Hata durumunda Alert bileşeni göster.
+
+# Test Strategy:
+Drag-drop işlevi, dosya türü/boyut validasyonu, progress bar animasyonu, iptal işlemi ve erişilebilirlik özelliklerinin test edilmesi
+
+# Subtasks:
+## 1. Temel FileUpload Bileşeni Yapısı ve Drag-Drop Desteği [done]
+### Dependencies: None
+### Description: FileUpload.tsx bileşeninin temel yapısını oluşturmak ve drag-drop işlevselliğini implement etmek
+### Details:
+components/FileUpload.tsx dosyasını oluştur. React useState ile drag durumunu yönet (isDragOver). onDragEnter, onDragLeave, onDragOver, onDrop event handler'larını implement et. Drag-drop alanı için div container'ı oluştur. ImagePlus ikonunu lucide-react'tan import et ve merkeze yerleştir. Temel CSS sınıflarını uygula: border-2 border-dashed, min-height, flex, items-center, justify-center.
+<info added on 2025-08-13T13:46:12.137Z>
+FileUpload bileşeni başarıyla tamamlandı. Bileşen app/components/forms/file-upload.tsx konumunda oluşturuldu ve aşağıdaki özellikler implement edildi:
+
+Temel Özellikler:
+- Drag-drop desteği (handleDragEnter, handleDragLeave, handleDrop)
+- File input ile manuel dosya seçimi
+- TypeScript interfaces (FileUploadProps, UploadState)
+- State management (uploadState, uploadProgress, errorMessage, selectedFile)
+- Ref kullanımı (fileInputRef, abortControllerRef)
+
+UI ve Erişilebilirlik:
+- ImagePlus, X, Upload ikonları (Lucide React)
+- Klavye navigasyonu (Enter/Space tuşları)
+- ARIA etiketleri (role='button', aria-label)
+- Focus management ve tabIndex
+- Button component entegrasyonu
+
+Durum Yönetimi:
+- UploadState types: idle, dragover, uploading, success, error
+- Callback functions: onFileSelect, onUploadComplete
+- Progress tracking ve error handling
+
+Sonraki adım: Dosya validasyonu ve boyut kontrolü (Task 5.2) için hazır.
+</info added on 2025-08-13T13:46:12.137Z>
+
+## 2. Dosya Validasyonu ve Boyut Kontrolü [done]
+### Dependencies: 5.1
+### Description: Yüklenen dosyaların format ve boyut kontrollerini implement etmek
+### Details:
+Dosya türü validasyonu için accept özelliğini '.jpg,.jpeg,.png' olarak ayarla. File nesnesinin type özelliğini kontrol et (image/jpeg, image/jpg, image/png). Maksimum dosya boyutu kontrolü için 10MB (10 * 1024 * 1024 bytes) limiti uygula. Validasyon hatalarını state'te tut ve kullanıcıya göster. validateFile fonksiyonu oluştur ve hem drag-drop hem de file input için kullan.
+<info added on 2025-08-13T13:46:51.068Z>
+Dosya validasyonu ve boyut kontrolü başarıyla tamamlandı. allowedTypes array'i ile JPG, JPEG ve PNG formatları destekleniyor. maxSize 10MB olarak ayarlandı. validateFile fonksiyonu useCallback hook ile optimize edildi ve { valid: boolean; error?: string } formatında response döndürüyor. handleFileSelect içinde validateFile çağrılarak invalid dosyalar için error state set ediliyor. Kullanıcı dostu hata mesajları gösteriliyor: 'Sadece JPG, JPEG ve PNG dosyaları desteklenir.' ve 'Dosya boyutu 10MB'dan küçük olmalıdır.' Hem drag-drop hem de file input için validasyon aktif. Sıradaki adım görsel durumlar ve styling (Task 5.3).
+</info added on 2025-08-13T13:46:51.068Z>
+
+## 3. Görsel Durumlar ve Styling [done]
+### Dependencies: 5.1
+### Description: Farklı durumlar için görsel stilleri ve progress bar'ı implement etmek
+### Details:
+Durum yönetimi için uploadStatus state'i oluştur ('idle', 'dragOver', 'uploading', 'success', 'error'). Idle durumu: border-dashed border-gray-300. Drag-over durumu: border-blue-400 bg-blue-50. Uploading durumu için progress bar component'i oluştur: h-2 rounded bg-gray-200 container, h-2 rounded bg-blue-600 progress bar. Progress state'i ile yükleme yüzdesini takip et. Success/error durumları için uygun renk ve ikon değişiklikleri uygula.
+<info added on 2025-08-13T13:47:38.031Z>
+Görsel durumlar ve styling implementasyonu tamamlandı. Tüm UploadState türleri ('idle', 'dragover', 'uploading', 'success', 'error') için farklı görsel feedback'ler uygulandı. IDLE durumu için border-gray-300 hover:border-gray-400 ve 'Fiş veya fatura görseli yükleyin' mesajı. DRAGOVER durumu için border-blue-400 bg-blue-50 ve 'Dosyayı buraya bırakın' mesajı. UPLOADING durumu için animate-pulse efekti, progress bar (bg-blue-600) ve iptal butonu. SUCCESS durumu için border-green-300 bg-green-50 ve 'Başarıyla yüklendi!' mesajı. ERROR durumu için border-red-300 bg-red-50 ve hata mesajı gösterimi. Ek özellikler: dosya önizlemesi (isim ve boyut), Reset & Upload butonları, disabled state styling (opacity-50), smooth transitions (transition-all duration-200) ve PRD uyumlu rounded-2xl border'lar eklendi. Ana sayfa entegrasyonu için hazır (Task 5.4).
+</info added on 2025-08-13T13:47:38.031Z>
+
+## 4. Dosya Yükleme İşlemi ve AbortController [done]
+### Dependencies: 5.2, 5.3
+### Description: Dosya yükleme API çağrısını ve iptal işlevselliğini implement etmek
+### Details:
+AbortController instance'ı oluştur ve yükleme işlemi sırasında sakla. FormData ile dosyayı hazırla ve /api/upload endpoint'ine POST request gönder. XMLHttpRequest veya fetch API ile progress tracking implement et. Upload progress event'lerini dinle ve progress state'ini güncelle. İptal butonu oluştur ve AbortController.abort() metodunu çağır. Başarılı yükleme sonrası success durumuna geç, hata durumunda error state'ine geç.
+<info added on 2025-08-13T13:49:26.561Z>
+Ana sayfa entegrasyonu başarıyla tamamlandı. app/page.tsx dosyasında 'use client' directive eklendi ve FileUpload bileşeni import edildi. React Hot Toast entegrasyonu yapıldı. handleFileSelect ve handleUploadComplete callback fonksiyonları implement edildi. Dosya Yükleme bölümü centered design ile rounded-2xl styling kullanılarak eklendi. Toast bildirimleri için success (dosya seçimi ve upload tamamlama) ve error (upload hatası) durumları yapılandırıldı. UI test kartları FileUpload referansı ile güncellendi ve toast test kartı eklendi. Status indicator 'FileUpload Bileşeni Hazır!' olarak güncellendi. Build test (npm run build) başarılı, TypeScript hataları yok, linting geçti ve static page generation başarılı.
+</info added on 2025-08-13T13:49:26.561Z>
+
+## 5. Erişilebilirlik ve Hata Yönetimi [done]
+### Dependencies: 5.3, 5.4
+### Description: Erişilebilirlik özelliklerini ve hata gösterimini implement etmek
+### Details:
+Drag-drop alanına role='button', tabIndex={0} ve uygun aria-label ekle. Klavye desteği için onKeyDown handler'ı implement et (Enter ve Space tuşları). Screen reader'lar için aria-describedby ile yükleme durumunu açıkla. Hata durumları için Alert bileşenini import et ve kullan. Hata mesajlarını kullanıcı dostu şekilde göster. Focus management için useRef hook'u kullan ve yükleme tamamlandığında focus'u uygun elemana yönlendir.
+

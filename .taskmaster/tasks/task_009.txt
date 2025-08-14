@@ -1,0 +1,43 @@
+# Task ID: 9
+# Title: Fiş Listesi Bileşeni
+# Status: done
+# Dependencies: 7, 8
+# Priority: medium
+# Description: Sağ sütunda yer alacak fiş kayıtları listesinin geliştirilmesi
+# Details:
+components/FisList.tsx oluştur: üst kısımda arama inputu (debounce 300ms), alt kısımda kart listesi. Kart tasarımı: rounded-xl border p-4 bg-white hover:shadow-md. Üst satır: 'Fiş #0001' (sol), 'Tutar: 10,42 TL' (sağ, font-semibold). Alt satır: tarih-saat, 'N ürün', 'Detay Gör' butonu. Sayfalama: Prev/Next butonları. Boş durum: illüstrasyon + metin. Loading: 5 satır skeleton (animate-pulse). Para formatı: tr-TR locale, virgül ondalık ayırıcı.
+
+# Test Strategy:
+Liste görünümü, arama işlevi, sayfalama, boş durum, loading state, para formatlaması ve responsive tasarımın test edilmesi
+
+# Subtasks:
+## 1. Arama Input Bileşeni Geliştirme [done]
+### Dependencies: None
+### Description: Fiş listesi üst kısmında yer alacak debounce özellikli arama input bileşeninin oluşturulması
+### Details:
+components/FisList.tsx dosyasını oluştur ve içinde arama input bileşenini geliştir. useState ile arama terimi state'ini yönet. useEffect ve setTimeout kullanarak 300ms debounce işlevi ekle. Input tasarımı: border rounded-lg px-3 py-2, placeholder 'Fiş ara...', search icon (lucide-react). onChange event'inde debounce logic'i uygula. Arama terimi değiştiğinde parent component'e callback ile bildir.
+
+## 2. Fiş Kartı Bileşeni Tasarımı [done]
+### Dependencies: 9.1
+### Description: Her bir fiş kaydı için kullanılacak kart bileşeninin tasarım ve yapısının oluşturulması
+### Details:
+FisCard alt bileşenini oluştur. Kart tasarımı: rounded-xl border p-4 bg-white hover:shadow-md transition-shadow. Üst satır: sol tarafta 'Fiş #0001' formatında fiş numarası, sağ tarafta 'Tutar: 10,42 TL' formatında tutar (font-semibold). Alt satır: tarih-saat (date-fns ile formatla), 'N ürün' metni, 'Detay Gör' butonu (btn-sm btn-outline). Para formatı için tr-TR locale kullan, virgül ondalık ayırıcı. Props interface tanımla: fisNo, tutar, tarihSaat, urunSayisi, onDetayGor.
+
+## 3. Liste Render ve State Yönetimi [done]
+### Dependencies: 9.2
+### Description: Fiş kartlarının listelenmesi ve bileşen state yönetiminin implementasyonu
+### Details:
+FisList ana bileşeninde fiş verilerini yönetmek için useState kullan. Mock veri array'i oluştur (en az 10 fiş kaydı). Arama filtrelemesi için useMemo hook'u kullan. Filtrelenmiş verileri FisCard bileşenlerine map ile render et. Loading state için isLoading boolean state'i ekle. Error handling için error state'i yönet. Arama terimi değiştiğinde filtreleme işlemini gerçekleştir. Key prop'u olarak fiş ID'sini kullan.
+
+## 4. Sayfalama ve Navigasyon [done]
+### Dependencies: 9.3
+### Description: Liste alt kısmında yer alacak sayfalama kontrollerinin geliştirilmesi
+### Details:
+Sayfalama için useState ile currentPage ve itemsPerPage (varsayılan 10) state'lerini yönet. Toplam sayfa sayısını hesapla (Math.ceil(totalItems / itemsPerPage)). Prev/Next butonları oluştur: disabled state'leri ile (ilk/son sayfa kontrolü). Buton tasarımı: btn-sm, prev için ChevronLeft icon, next için ChevronRight icon. Sayfa değiştiğinde görünür verileri slice ile güncelle. Sayfa numarası göstergesi ekle: 'Sayfa X / Y' formatında. useMemo ile sayfalanmış verileri optimize et.
+
+## 5. Loading ve Boş Durum Bileşenleri [done]
+### Dependencies: 9.4
+### Description: Yükleme durumu skeleton'ları ve boş liste durumu için UI bileşenlerinin oluşturulması
+### Details:
+Loading durumu için FisCardSkeleton bileşeni oluştur: 5 adet skeleton kartı, animate-pulse efekti, rounded-xl border p-4 bg-gray-100. İçinde div'ler ile fiş kartı yapısını taklit et (üst satır 2 div, alt satır 3 div). Boş durum için EmptyState bileşeni: merkezi hizalama, illüstrasyon (büyük search icon), 'Fiş bulunamadı' başlığı, 'Arama kriterlerinizi değiştirmeyi deneyin' alt metni. Conditional rendering ile loading, empty ve normal durumları yönet. CSS classes: text-center, text-gray-500, space-y-4.
+

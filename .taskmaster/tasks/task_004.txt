@@ -1,0 +1,43 @@
+# Task ID: 4
+# Title: İstatistik Kartları Bileşeni
+# Status: done
+# Dependencies: 3
+# Priority: medium
+# Description: Dashboard anasayfasında gösterilecek 5 adet istatistik kartının geliştirilmesi
+# Details:
+components/StatCard.tsx bileşeni oluştur: rounded-2xl border bg-white p-4 shadow-sm stil. Sol tarafta ikon rozeti (36x36 rounded-full p-2 bg-slate-50), sağ tarafta başlık ve değer. Lucide ikonları kullan: ListChecks (toplam kayıt), Coins (toplam tutar), Percent (toplam KDV), CalendarClock (bugünkü kayıtlar), Gauge (ortalama tutar). Hover efekti: shadow-md translate-y-[1px]. Değer metni için tabular-nums font kullan. Grid layout: grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4.
+
+# Test Strategy:
+Kartların responsive davranışı, hover efektleri, ikon görünümü ve sayısal değerlerin doğru formatlanması test edilecek
+
+# Subtasks:
+## 1. StatCard Temel Bileşeni Oluşturma [done]
+### Dependencies: None
+### Description: StatCard.tsx bileşeninin temel yapısının ve stillerinin oluşturulması
+### Details:
+components/StatCard.tsx dosyasını oluştur. Bileşen props interface'i tanımla: title (string), value (string|number), icon (LucideIcon), iconBgColor (optional). Temel JSX yapısı: rounded-2xl border bg-white p-4 shadow-sm container, sol tarafta ikon rozeti (36x36 rounded-full p-2 bg-slate-50), sağ tarafta başlık ve değer div'i. Hover efekti için transition-all duration-200 hover:shadow-md hover:-translate-y-[1px] sınıflarını ekle. Değer metni için font-mono tabular-nums sınıflarını kullan.
+
+## 2. Lucide İkonları Entegrasyonu [done]
+### Dependencies: 4.1
+### Description: Gerekli Lucide ikonlarının import edilmesi ve StatCard bileşeninde kullanılması
+### Details:
+lucide-react paketinden gerekli ikonları import et: ListChecks, Coins, Percent, CalendarClock, Gauge. StatCard bileşeninde icon prop'unu dinamik olarak render et. İkon bileşenini 20x20 boyutunda (size={20}) ve text-slate-600 rengiyle göster. İkon rozeti için bg-slate-50 arka plan rengini uygula. Her ikon için uygun aria-label ekle.
+
+## 3. İstatistik Veri Tiplerini Tanımlama [done]
+### Dependencies: 4.2
+### Description: İstatistik kartlarında gösterilecek veri tiplerinin ve formatlarının belirlenmesi
+### Details:
+types/stats.ts dosyası oluştur. StatItem interface'i tanımla: id, title, value, icon, formatType ('number' | 'currency' | 'percentage'). Beş istatistik için sabit veri yapısı oluştur: toplam kayıt (ListChecks), toplam tutar (Coins), toplam KDV (Percent), bugünkü kayıtlar (CalendarClock), ortalama tutar (Gauge). Sayı formatlama fonksiyonları ekle: formatCurrency (Türk Lirası), formatNumber (binlik ayırıcı), formatPercentage.
+
+## 4. İstatistik Kartları Grid Layout'u [done]
+### Dependencies: 4.1, 4.3
+### Description: 5 adet istatistik kartının responsive grid düzeninde gösterilmesi
+### Details:
+components/StatsGrid.tsx bileşeni oluştur. Grid container için 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4' sınıflarını kullan. Her StatCard için mock veri ile render et. Responsive breakpoint'lerde doğru görünüm: mobile'da tek sütun, tablet'te 2 sütun, desktop'ta 5 sütun. Container max genişliği ve padding ayarları ekle. Loading state için skeleton kartları oluştur.
+
+## 5. İstatistik Verilerini API'den Çekme [done]
+### Dependencies: 4.4
+### Description: Gerçek istatistik verilerinin Supabase'den çekilmesi ve kartlarda gösterilmesi
+### Details:
+lib/api/stats.ts dosyası oluştur. getStats fonksiyonu ile Supabase'den istatistikleri çek: COUNT(*) toplam kayıt, SUM(total) toplam tutar, SUM(total_kdv) toplam KDV, bugünkü kayıtlar için WHERE DATE(created_at) = CURRENT_DATE, AVG(total) ortalama tutar. StatsGrid bileşeninde SWR ile veri çekme, loading ve error state'leri. Veri güncellendiğinde otomatik yenileme için mutate kullan. Error boundary ile hata yakalama.
+

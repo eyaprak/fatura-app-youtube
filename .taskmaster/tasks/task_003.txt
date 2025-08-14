@@ -1,0 +1,43 @@
+# Task ID: 3
+# Title: Temel Layout ve Header Bileşeni
+# Status: done
+# Dependencies: 1
+# Priority: medium
+# Description: Ana layout yapısı, header bileşeni ve navigasyon menüsünün oluşturulması
+# Details:
+app/layout.tsx'de temel layout yapısı kur. components/Header.tsx oluştur: 64px yükseklik, bg-white, shadow-sm, sol tarafta 'FY' logosu, sağ tarafta 'Ana Sayfa' linki. Responsive tasarım için max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 container kullan. Klavye erişilebilirliği için focus-visible stilleri ekle. Toast provider'ı layout'a entegre et.
+
+# Test Strategy:
+Header'ın farklı ekran boyutlarında doğru görünümü, klavye navigasyonu, focus stilleri ve toast mesajlarının çalışması test edilecek
+
+# Subtasks:
+## 1. Ana Layout Yapısının Oluşturulması [done]
+### Dependencies: None
+### Description: app/layout.tsx dosyasında temel layout yapısını kurma ve gerekli provider'ları entegre etme
+### Details:
+app/layout.tsx dosyasını düzenle. HTML yapısını oluştur: html lang='tr', body className ile temel stiller. Metadata ayarları (title, description). Toast provider'ı (react-hot-toast) layout'a entegre et. Font optimizasyonu için Inter font'unu next/font/google'dan import et. Global CSS import'ları ekle.
+
+## 2. Header Bileşeni Temel Yapısının Oluşturulması [done]
+### Dependencies: 3.1
+### Description: components/Header.tsx dosyasını oluşturma ve temel HTML yapısını kurma
+### Details:
+components/Header.tsx dosyası oluştur. React functional component yapısı kur. Header elementi: 64px yükseklik (h-16), bg-white, shadow-sm sınıfları. Container div: max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 responsive padding'ler. Flex layout: justify-between items-center ile logo ve navigasyon alanlarını ayır.
+
+## 3. Logo ve Navigasyon Elementlerinin Eklenmesi [done]
+### Dependencies: 3.2
+### Description: Header içerisine FY logosu ve Ana Sayfa linkinin eklenmesi
+### Details:
+Sol tarafta logo alanı: 'FY' text'i için span elementi, font-bold text-xl text-blue-600 sınıfları. Sağ tarafta navigasyon: nav elementi içinde ul>li>Link yapısı. 'Ana Sayfa' linki: Next.js Link component'i kullan, href='/', text-gray-700 hover:text-blue-600 transition-colors sınıfları.
+
+## 4. Responsive Tasarım ve Erişilebilirlik Özelliklerinin Eklenmesi [done]
+### Dependencies: 3.3
+### Description: Header bileşenine responsive davranış ve klavye erişilebilirliği ekleme
+### Details:
+Responsive breakpoint'ler: sm:px-6 lg:px-8 padding ayarları. Mobile görünüm için logo boyutunu ayarla (text-lg sm:text-xl). Klavye erişilebilirliği: focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sınıfları link'lere ekle. ARIA etiketleri: nav role='navigation' aria-label='Ana navigasyon'.
+
+## 5. Header Bileşeninin Layout'a Entegrasyonu [done]
+### Dependencies: 3.1, 3.4
+### Description: Oluşturulan Header bileşenini ana layout'a entegre etme ve final testleri
+### Details:
+app/layout.tsx dosyasında Header bileşenini import et. Body içerisinde Header'ı en üste yerleştir. Main content alanı için: main elementi, min-h-screen pt-16 (header yüksekliği kadar top padding) sınıfları. Children prop'unu main içerisine yerleştir. TypeScript tip tanımlarını kontrol et.
+

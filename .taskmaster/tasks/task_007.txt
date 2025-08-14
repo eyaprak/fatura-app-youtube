@@ -1,0 +1,43 @@
+# Task ID: 7
+# Title: Veri Çekme ve SWR Entegrasyonu
+# Status: done
+# Dependencies: 2, 6
+# Priority: medium
+# Description: Supabase'den fiş verilerini çekmek için SWR ile veri yönetimi sisteminin kurulması
+# Details:
+SWR paketini yükle. lib/api.ts'de Supabase sorguları: getFisler (sayfalama, filtreleme, arama), getFisById, getStatistics. hooks/useFisler.ts, hooks/useStatistics.ts custom hook'ları oluştur. Filtreleme parametreleri: tarih aralığı, fiş no, min/max tutar. Arama: fiş no, ürün adı, açıklama alanlarında. Sayfalama: 20 kayıt/sayfa. SWR cache invalidation için mutate fonksiyonunu export et.
+
+# Test Strategy:
+Veri çekme işlemlerinin doğru çalışması, filtreleme ve arama fonksiyonlarının test edilmesi, cache invalidation'ın webhook sonrası çalışması
+
+# Subtasks:
+## 1. SWR Paket Kurulumu ve Temel Konfigürasyon [done]
+### Dependencies: None
+### Description: SWR paketinin projeye eklenmesi ve temel konfigürasyonun yapılması
+### Details:
+npm install swr komutu ile SWR paketini yükle. app/layout.tsx dosyasında SWRConfig provider'ını ekle. Temel SWR konfigürasyonu: refreshInterval: 0, revalidateOnFocus: false, revalidateOnReconnect: true. Error handling için global error handler tanımla. TypeScript için SWR tiplerini import et.
+
+## 2. Supabase API Fonksiyonlarının Oluşturulması [done]
+### Dependencies: 7.1
+### Description: lib/api.ts dosyasında Supabase sorguları için temel API fonksiyonlarının yazılması
+### Details:
+lib/api.ts dosyası oluştur. getFisler fonksiyonu: sayfalama (page, limit=20), filtreleme (tarih aralığı, fiş no, min/max tutar), arama (fiş no, ürün adı, açıklama) parametreleri ile Supabase sorgusu. getFisById fonksiyonu: tek fiş detayı çekme. getStatistics fonksiyonu: toplam fiş sayısı, toplam tutar, ortalama tutar hesaplama. Her fonksiyon için TypeScript interface'leri tanımla. Error handling ve response formatı standardize et.
+
+## 3. Fiş Listesi için Custom Hook Oluşturma [done]
+### Dependencies: 7.2
+### Description: hooks/useFisler.ts dosyasında fiş verilerini yönetmek için custom hook'un yazılması
+### Details:
+hooks/useFisler.ts dosyası oluştur. useFisler hook'u: sayfa, filtreleme ve arama parametrelerini alacak. SWR ile getFisler API fonksiyonunu çağır. Key generation: parametrelere göre unique cache key oluştur. Loading, error, data state'lerini return et. Filtreleme parametreleri için TypeScript interface tanımla. useSWRMutation ile mutate fonksiyonunu export et. Infinite loading için useSWRInfinite alternatifi hazırla.
+
+## 4. İstatistik Verileri için Custom Hook Oluşturma [done]
+### Dependencies: 7.2
+### Description: hooks/useStatistics.ts dosyasında istatistik verilerini yönetmek için custom hook'un yazılması
+### Details:
+hooks/useStatistics.ts dosyası oluştur. useStatistics hook'u: SWR ile getStatistics API fonksiyonunu çağır. Cache key: 'statistics' olarak sabit. RefreshInterval: 5 dakika (300000ms) ayarla. İstatistik verileri için TypeScript interface tanımla: toplam fiş sayısı, toplam tutar, ortalama tutar, günlük/aylık trend verileri. Loading ve error state'lerini handle et. Mutate fonksiyonunu export et.
+
+## 5. Cache Invalidation ve Mutate Sistem Entegrasyonu [done]
+### Dependencies: 7.3, 7.4
+### Description: SWR cache invalidation sisteminin kurulması ve mutate fonksiyonlarının export edilmesi
+### Details:
+lib/swr-utils.ts dosyası oluştur. Global mutate fonksiyonlarını export et: mutateFisler, mutateStatistics. Cache key pattern'leri tanımla. invalidateAll fonksiyonu: tüm cache'i temizlemek için. invalidateFisler fonksiyonu: fiş listesi cache'ini temizlemek için. Upload sonrası otomatik cache invalidation için helper fonksiyonlar. useSWRConfig hook'undan mutate fonksiyonunu kullan. TypeScript için cache key tiplerini tanımla.
+

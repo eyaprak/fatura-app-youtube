@@ -1,0 +1,46 @@
+# Task ID: 6
+# Title: API Route ve n8n Webhook Entegrasyonu
+# Status: done
+# Dependencies: 5
+# Priority: high
+# Description: Dosya yükleme için Next.js API route'u ve n8n webhook'una veri gönderimi
+# Details:
+app/api/upload/route.ts oluştur: POST endpoint, multipart/form-data ile dosya al, n8n webhook URL'ine FormData olarak gönder. Hata yönetimi ve timeout (30s) ayarla. n8n workflow response'unu kontrol et: { 'upload': 'success' } formatı bekle. Dosya boyutu ve türü server-side validasyonu. CORS ayarları gerekirse ekle. Environment variable olarak N8N_WEBHOOK_URL tanımla.
+
+# Test Strategy:
+API endpoint'in dosya alması, n8n webhook'una başarılı gönderim, hata durumlarında uygun response dönmesi ve timeout senaryolarının test edilmesi
+
+# Subtasks:
+## 1. Environment Variable ve Temel API Route Yapısı [done]
+### Dependencies: None
+### Description: N8N_WEBHOOK_URL environment variable'ını tanımla ve temel API route yapısını oluştur
+### Details:
+.env.local dosyasına N8N_WEBHOOK_URL environment variable'ını ekle. app/api/upload/route.ts dosyasını oluştur ve temel POST endpoint yapısını kur. Next.js API route handler'ı için gerekli import'ları ekle (NextRequest, NextResponse). Environment variable'ın varlığını kontrol eden temel yapıyı oluştur.
+<info added on 2025-08-13T13:54:42.729Z>
+Subtask 6.1 başarıyla tamamlandı! Environment variable konfigürasyonu ve temel API route yapısı kuruldu. N8N_WEBHOOK_URL (.env.local) eklendi, default değer http://localhost:5678/webhook/fatura-upload olarak ayarlandı. app/api/upload-file/route.ts dosyası oluşturuldu ve POST method ile kapsamlı hata yönetimi implement edildi. GET method için 405 Method Not Allowed response'u eklendi. TypeScript interface'leri (UploadResponse) tanımlandı. Multipart form data, content-type, dosya formatı (JPG/JPEG/PNG) ve boyut (10MB limit) validasyonları eklendi. Upload metadata (uploadId, timestamp) üretimi implement edildi. Standardize edilmiş response yapısı ve hata kodları (CONFIGURATION_ERROR, INVALID_CONTENT_TYPE vb.) oluşturuldu. Build ve ESLint testleri başarılı, route kaydı tamamlandı.
+</info added on 2025-08-13T13:54:42.729Z>
+
+## 2. Multipart Form Data İşleme ve Dosya Validasyonu [done]
+### Dependencies: 6.1
+### Description: Gelen multipart/form-data'yı işle ve server-side dosya validasyonunu uygula
+### Details:
+request.formData() ile multipart form data'yı parse et. Dosya boyutu kontrolü (max 10MB), dosya türü validasyonu (JPG, JPEG, PNG) ve dosya varlığı kontrollerini implement et. Validasyon hatalarında uygun HTTP status code'ları (400, 413) ile error response'ları döndür. FormData objesinden dosyayı extract etme işlemini gerçekleştir.
+
+## 3. N8N Webhook'una Veri Gönderimi [done]
+### Dependencies: 6.2
+### Description: Validasyondan geçen dosyayı n8n webhook'una FormData olarak gönder
+### Details:
+Yeni bir FormData objesi oluştur ve dosyayı append et. fetch() API'si ile n8n webhook URL'ine POST request gönder. Request headers'ında Content-Type'ı multipart/form-data olarak ayarla. Webhook'a gönderilecek FormData'yı hazırla ve additional metadata (timestamp, filename) ekle.
+
+## 4. Timeout ve Hata Yönetimi [done]
+### Dependencies: 6.3
+### Description: 30 saniye timeout ayarla ve kapsamlı hata yönetimi sistemini implement et
+### Details:
+AbortController ile 30 saniye timeout mekanizması kur. Network hataları, timeout durumları ve n8n webhook'undan gelen hataları yakala. Try-catch blokları ile error handling yap. Farklı hata türleri için uygun HTTP status code'ları (408 timeout, 502 webhook error, 500 server error) döndür. Error logging için console.error kullan.
+
+## 5. Response Validasyonu ve CORS Ayarları [done]
+### Dependencies: 6.4
+### Description: N8N workflow response'unu validate et ve gerekli CORS ayarlarını yap
+### Details:
+N8N webhook'undan gelen response'u parse et ve { 'upload': 'success' } formatını kontrol et. Response validation başarısızsa uygun error message döndür. CORS headers'ları ekle (Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers). OPTIONS method'u için preflight request handling ekle. Başarılı upload durumunda client'a success response döndür.
+

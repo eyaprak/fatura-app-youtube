@@ -1,0 +1,43 @@
+# Task ID: 1
+# Title: Proje Kurulumu ve Temel Yapılandırma
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Next.js 15 projesi kurulumu, Tailwind CSS konfigürasyonu, Supabase bağlantısı ve temel klasör yapısının oluşturulması
+# Details:
+Next.js 15 ile yeni proje oluştur: `npx create-next-app@latest fatura-dashboard --typescript --tailwind --eslint --app`. Supabase client kurulumu (@supabase/supabase-js), react-hot-toast, lucide-react, date-fns paketlerini yükle. Tailwind config'de custom renkler (blue-600 primary, green-500 success vb.) ve spacing değerlerini tanımla. .env.local dosyasında SUPABASE_URL ve SUPABASE_ANON_KEY değişkenlerini ayarla. /lib/supabase.ts dosyasında client konfigürasyonu yap.
+
+# Test Strategy:
+Proje başlatma (npm run dev), Supabase bağlantı testi, Tailwind CSS sınıflarının çalışması ve TypeScript derlemesinin hatasız olması kontrol edilecek
+
+# Subtasks:
+## 1. Next.js 15 Projesi Oluşturma ve Temel Paket Kurulumu [done]
+### Dependencies: None
+### Description: Next.js 15 ile yeni proje oluşturulması ve gerekli paketlerin yüklenmesi
+### Details:
+Terminal'de `npx create-next-app@latest fatura-dashboard --typescript --tailwind --eslint --app` komutu ile proje oluştur. Ardından proje dizinine geç ve şu paketleri yükle: `npm install @supabase/supabase-js react-hot-toast lucide-react date-fns swr`. package.json dosyasında tüm paketlerin doğru versiyonlarda yüklendiğini kontrol et. TypeScript ve ESLint konfigürasyonlarının aktif olduğunu doğrula.
+
+## 2. Tailwind CSS Özelleştirme ve Tema Konfigürasyonu [done]
+### Dependencies: None
+### Description: Tailwind CSS'de custom renkler ve spacing değerlerinin tanımlanması
+### Details:
+tailwind.config.js dosyasını düzenle. theme.extend bölümüne custom renkler ekle: primary: 'rgb(37 99 235)', success: 'rgb(34 197 94)', danger: 'rgb(239 68 68)', warning: 'rgb(245 158 11)', gray: { 50: 'rgb(249 250 251)', 100: 'rgb(243 244 246)', 900: 'rgb(17 24 39)' }. Custom spacing değerleri ve font ailelerini tanımla. globals.css dosyasında temel stil sınıflarını oluştur.
+
+## 3. Environment Variables ve Supabase Client Konfigürasyonu [done]
+### Dependencies: None
+### Description: Çevre değişkenlerinin ayarlanması ve Supabase client'ının yapılandırılması
+### Details:
+.env.local dosyası oluştur ve SUPABASE_URL, SUPABASE_ANON_KEY değişkenlerini ekle. lib klasörü oluştur ve içinde supabase.ts dosyası yarat. createClient fonksiyonu ile Supabase client'ını initialize et. TypeScript için types klasörü oluştur ve supabase.ts'de Database tiplerini tanımla. Client'ın singleton pattern ile export edilmesini sağla.
+
+## 4. Proje Klasör Yapısı ve Temel Dosya Organizasyonu [done]
+### Dependencies: None
+### Description: Projenin temel klasör yapısının oluşturulması ve dosya organizasyonunun kurulması
+### Details:
+app dizini altında: components (ui, forms, layout alt klasörleri), hooks, lib (utils, validations alt klasörleri), types klasörlerini oluştur. components/ui klasöründe Button, Card, Input gibi temel UI bileşenlerinin boş template'lerini hazırla. lib/utils.ts'de cn (className merge) fonksiyonu ve diğer yardımcı fonksiyonları ekle. types/index.ts'de Fiş, FişItem gibi temel tip tanımlarını yap.
+
+## 5. Geliştirme Ortamı Doğrulama ve İlk Çalıştırma Testi [done]
+### Dependencies: None
+### Description: Tüm konfigürasyonların doğrulanması ve projenin çalışır durumda olmasının sağlanması
+### Details:
+npm run dev ile projeyi başlat ve herhangi bir hata olmadığını kontrol et. TypeScript derlemesinin başarılı olduğunu doğrula (npm run build). ESLint kurallarının çalıştığını test et (npm run lint). Tailwind CSS sınıflarının aktif olduğunu basit bir test sayfası ile kontrol et. Supabase bağlantısının çalıştığını doğrula. Hot reload özelliğinin aktif olduğunu test et.
+

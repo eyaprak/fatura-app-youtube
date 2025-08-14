@@ -1,0 +1,43 @@
+# Task ID: 10
+# Title: Ana Sayfa Entegrasyonu
+# Status: done
+# Dependencies: 4, 5, 8, 9
+# Priority: high
+# Description: Tüm bileşenlerin ana sayfada bir araya getirilmesi ve layout düzenlemesi
+# Details:
+app/page.tsx'de ana sayfa layout'u: üst kısımda istatistik kartları (5'li grid), orta kısımda dosya yükleme bileşeni (max-w-xl mx-auto), alt kısımda 2 sütunlu grid (md:grid-cols-4, sol 1 sütun filtre, sağ 3 sütun liste). SWR ile veri çekme, upload sonrası mutate ile liste güncelleme. Toast mesajları: başarı/hata durumları. Responsive breakpoint'ler: sm, md, lg. Container: max-w-7xl mx-auto px-4.
+
+# Test Strategy:
+Tüm bileşenlerin doğru yerleşimi, responsive davranış, veri akışı, upload-liste senkronizasyonu ve toast mesajlarının test edilmesi
+
+# Subtasks:
+## 1. Ana Sayfa Layout Yapısının Oluşturulması [done]
+### Dependencies: None
+### Description: app/page.tsx dosyasında ana sayfa için temel layout yapısının kurulması ve responsive container ayarlarının yapılması
+### Details:
+app/page.tsx dosyasını oluştur. Ana container için max-w-7xl mx-auto px-4 sınıflarını kullan. Sayfa yapısını 3 ana bölüme ayır: üst kısım (istatistik kartları), orta kısım (dosya yükleme), alt kısım (filtre ve liste). Her bölüm için uygun spacing (space-y-6) ve responsive breakpoint'leri (sm, md, lg) tanımla. Layout için flex flex-col min-h-screen yapısını kullan.
+
+## 2. İstatistik Kartları Grid Entegrasyonu [done]
+### Dependencies: 10.1
+### Description: Üst kısımda 5'li grid yapısında istatistik kartlarının yerleştirilmesi ve responsive davranışının sağlanması
+### Details:
+StatCard bileşenini import et. Grid container için grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 sınıflarını kullan. 5 adet StatCard bileşenini yerleştir: toplam kayıt, toplam tutar, toplam KDV, bugünkü kayıtlar, ortalama tutar. Her kart için uygun ikon ve değer prop'larını geç. useStatistics hook'unu kullanarak gerçek verileri bağla.
+
+## 3. Dosya Yükleme Bileşeni Entegrasyonu [done]
+### Dependencies: 10.1
+### Description: Orta kısımda dosya yükleme bileşeninin yerleştirilmesi ve upload sonrası veri güncelleme mekanizmasının kurulması
+### Details:
+FileUpload bileşenini import et. Orta kısımda max-w-xl mx-auto container içinde yerleştir. Upload başarılı olduğunda SWR mutate fonksiyonunu çağırarak fiş listesini ve istatistikleri güncelle. Toast mesajları için react-hot-toast kullan: başarılı upload için yeşil toast, hata durumları için kırmızı toast. Upload sırasında loading state'ini göster.
+
+## 4. Filtre ve Liste Grid Yapısının Kurulması [done]
+### Dependencies: 10.1
+### Description: Alt kısımda 2 sütunlu grid yapısının oluşturulması ve filtre ile liste bileşenlerinin yerleştirilmesi
+### Details:
+Alt kısım için grid md:grid-cols-4 gap-6 yapısını oluştur. Sol tarafta 1 sütun (md:col-span-1) için FisFilter bileşenini yerleştir. Sağ tarafta 3 sütun (md:col-span-3) için FisList bileşenini yerleştir. Mobile'da tek sütun (grid-cols-1) olacak şekilde responsive ayarla. Filtre ve liste arasında veri paylaşımı için state management kur.
+
+## 5. SWR Veri Yönetimi ve Toast Sistemi Entegrasyonu [done]
+### Dependencies: 10.2, 10.3, 10.4
+### Description: Tüm bileşenler arası veri akışının SWR ile yönetilmesi ve toast mesaj sisteminin entegrasyonu
+### Details:
+useFisler ve useStatistics hook'larını ana sayfada kullan. SWR mutate fonksiyonlarını tüm bileşenlere prop olarak geç. Toaster bileşenini layout'a ekle. Error boundary ekleyerek hata durumlarını yakala ve toast ile göster. Loading state'leri için Skeleton bileşenlerini kullan. Veri yenileme için refresh butonu ekle.
+

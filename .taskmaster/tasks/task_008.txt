@@ -1,0 +1,54 @@
+# Task ID: 8
+# Title: Filtre Paneli Bileşeni
+# Status: done
+# Dependencies: 7
+# Priority: medium
+# Description: Sol sütunda yer alacak filtreleme formunun geliştirilmesi
+# Details:
+components/FilterPanel.tsx oluştur: rounded-2xl border bg-white p-4 kart içinde form. Alanlar: başlangıç/bitiş tarihi (date input), fiş no (text input), min/max tutar (number input). React Hook Form kullan, zod validation schema. Butonlar: 'Filtrele' (btn-primary), 'Sıfırla' (btn-ghost). Form state'i URL query params ile senkronize et. Debounce 300ms arama için. Erişilebilirlik: label-input bağlantıları, aria-invalid, hata mesajları.
+
+# Test Strategy:
+Form validasyonu, URL query params senkronizasyonu, debounce işlevi, buton durumları ve erişilebilirlik özelliklerinin test edilmesi
+
+# Subtasks:
+## 1. Zod Validation Schema ve TypeScript Tiplerinin Oluşturulması [done]
+### Dependencies: None
+### Description: Filtre formu için gerekli validation schema ve TypeScript tiplerinin tanımlanması
+### Details:
+lib/validations/filter.ts dosyası oluştur. Zod schema tanımla: startDate (optional date), endDate (optional date), fisNo (optional string), minAmount (optional number, min 0), maxAmount (optional number, min 0). Schema'dan TypeScript tiplerini çıkar (FilterFormData). Tarih validasyonu: başlangıç tarihi bitiş tarihinden büyük olamaz. Tutar validasyonu: min tutar max tutardan büyük olamaz.
+
+## 2. Temel FilterPanel Bileşeni ve Form Yapısının Oluşturulması [done]
+### Dependencies: 8.1
+### Description: React Hook Form ile temel form yapısının ve UI kartının oluşturulması
+### Details:
+components/FilterPanel.tsx oluştur. React Hook Form useForm hook'u ile form setup yap, zod resolver kullan. Kart yapısı: rounded-2xl border bg-white p-4 sınıfları. Form alanları: başlangıç/bitiş tarihi (date input), fiş no (text input), min/max tutar (number input). Her alan için label-input bağlantıları kur, htmlFor ve id kullan. Temel form layout'u grid veya flex ile düzenle.
+
+## 3. Form Butonları ve Validation Mesajlarının Eklenmesi [done]
+### Dependencies: 8.2
+### Description: Filtrele ve Sıfırla butonlarının eklenmesi, hata mesajlarının gösterilmesi
+### Details:
+Form alt kısmına buton grubu ekle: 'Filtrele' butonu (btn-primary sınıfı), 'Sıfırla' butonu (btn-ghost sınıfı). React Hook Form'un formState.errors kullanarak hata mesajlarını göster. Aria-invalid attribute'larını hatalı alanlara ekle. Hata mesajları kırmızı renkte, alan altında gösterilsin. Sıfırla butonu form.reset() çağırsın.
+<info added on 2025-08-13T14:39:17.535Z>
+Görev tamamlandı: Form butonları başarıyla eklendi ve validation sistemi geliştirildi. Filtrele butonu loading durumu ve form gönderimi ile birlikte primary mavi renkte uygulandı. Sıfırla butonu akıllı değişiklik algılama özelliği ile ghost stilinde eklendi. Validation hata gösterimi Türkçe alan adları ile geliştirildi. Aria-invalid attribute'ları ile erişilebilirlik iyileştirildi. Tüm lint ve tip kontrolleri başarıyla geçiyor. Form butonları doğru durum yönetimi ve kullanıcı deneyimi ile çalışıyor.
+</info added on 2025-08-13T14:39:17.535Z>
+
+## 4. URL Query Parameters Senkronizasyonu [done]
+### Dependencies: 8.3
+### Description: Form state'inin URL query parameters ile senkronize edilmesi
+### Details:
+useSearchParams ve useRouter hook'larını kullan. Form değerleri değiştiğinde URL query params'ı güncelle. Sayfa yüklendiğinde URL'den mevcut filtreleri form'a yükle. URLSearchParams kullanarak query string'i yönet. Tarih değerlerini ISO string formatında URL'de sakla. Boş değerleri URL'den temizle.
+<info added on 2025-08-13T14:40:49.321Z>
+Next.js navigation hook'ları (useSearchParams, useRouter, usePathname) entegre edildi. filterToUrlQuery ve urlQueryToFilter yardımcı fonksiyonları ile form-URL senkronizasyonu sağlandı. Bileşen mount edildiğinde URL parametrelerinden form başlatması yapılıyor. syncWithUrl prop'u ile isteğe bağlı URL senkronizasyonu kontrolü eklendi. Form gönderiminde router.replace ile URL güncelleniyor. Form sıfırlamada URL temizleniyor. scroll:false seçeneği ile scroll pozisyonu korunuyor. Tüm lint ve TypeScript kontrolleri geçiyor. Form durumu artık yer imlenebilir filtreler için tarayıcı URL'si ile düzgün senkronize oluyor.
+</info added on 2025-08-13T14:40:49.321Z>
+
+## 5. Debounce Arama Özelliğinin Implementasyonu [done]
+### Dependencies: 8.4
+### Description: 300ms debounce ile arama işlevselliğinin eklenmesi ve final optimizasyonlar
+### Details:
+useDebounce custom hook'u oluştur veya lodash.debounce kullan. Form değerleri değiştiğinde 300ms bekleyip arama yap. useEffect ile form watch'lama ve debounced callback. Loading state'i ekle, arama sırasında butonları disable et. Erişilebilirlik: screen reader'lar için aria-live region ekle, arama durumu bildirimleri. Performance: gereksiz re-render'ları önle.
+<info added on 2025-08-13T14:44:08.928Z>
+Görev 8.5 Tamamlandı: Debounce Arama Implementasyonu
+
+TypeScript generics ile özel useDebounce hook'u oluşturuldu. 300ms debounced otomatik arama işlevselliği implement edildi. Callback debouncing için useDebouncedCallback hook'u eklendi. Arama-spesifik debouncing için useDebouncedSearch hook'u geliştirildi. FilterPanel form değişikliklerinde otomatik arama ile geliştirildi. Görsel arama göstergeleri ve loading state'leri eklendi. Erişilebilirlik özellikleri implement edildi (aria-live bölgeleri, screen reader duyuruları). Header ve butonlarda arama progress göstergeleri eklendi. Debounce gecikme bilgisi ile otomatik arama bildirimi eklendi. Gereksiz re-render'ları önlemek için performans optimizasyonları yapıldı. Tüm lint ve TypeScript kontrolleri başarılı. Filtre paneli artık uygun UX geri bildirimi ile sorunsuz gerçek zamanlı arama deneyimi sunuyor.
+</info added on 2025-08-13T14:44:08.928Z>
+

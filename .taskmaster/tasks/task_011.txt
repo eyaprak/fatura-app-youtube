@@ -1,0 +1,80 @@
+# Task ID: 11
+# Title: Detay Sayfası
+# Status: done
+# Dependencies: 7, 10
+# Priority: medium
+# Description: Fiş detaylarını gösteren ayrı sayfanın geliştirilmesi
+# Details:
+app/fis/[id]/page.tsx oluştur: breadcrumb navigasyon, header kart (fiş no + tarih), 3'lü bilgi kartları grid (fiş bilgileri, tarih bilgileri, toplam bilgiler - yeşil arka plan). Ürün tablosu: sütunlar (ürün adı, miktar, birim fiyat, KDV, toplam), responsive overflow-x-auto. Alt özet: sol tarafta son güncelleme, sağ tarafta toplam ürün/genel toplam. Para formatı tr-TR, tarih formatı date-fns tr locale. Loading ve error state'leri.
+
+# Test Strategy:
+Detay sayfası routing'i, veri görünümü, tablo responsive davranışı, para/tarih formatlaması ve error handling'in test edilmesi
+
+# Subtasks:
+## 1. Detay Sayfası Temel Yapısı ve Routing [done]
+### Dependencies: None
+### Description: app/fis/[id]/page.tsx dosyasını oluştur ve temel sayfa yapısını kur
+### Details:
+app/fis/[id]/page.tsx dosyasını oluştur. Dynamic routing için params'dan id'yi al. Temel sayfa container'ını kur (max-w-7xl mx-auto px-4). Loading ve error state'leri için useState hook'larını ekle. Supabase'den fiş detaylarını çekmek için useEffect hook'u kur. Breadcrumb navigasyon bileşenini ekle (Ana Sayfa > Fişler > Fiş Detayı formatında).
+<info added on 2025-08-13T14:57:43.916Z>
+Detay sayfası temel yapısı başarıyla tamamlandı. app/fis/[id]/page.tsx dosyası oluşturuldu ve dynamic routing implementasyonu yapıldı. Temel sayfa container'ı (max-w-7xl mx-auto px-4) kuruldu. Loading, error ve success state'leri için useState hook'ları eklendi. getFisById API fonksiyonu kullanılarak Supabase'den veri çekme işlemi implementasyonu tamamlandı. Breadcrumb navigation ve geri dön butonu eklendi. Temel fiş bilgilerini gösteren card yapısı hazırlandı. ArrowLeft, FileText ve Receipt icon'ları icons.ts dosyasına eklendi. Responsive grid layout ile fiş bilgileri gösteriliyor. useRouter hook'u ile navigation, Supabase Fis tipini kullanarak type safety, ApiResponse pattern ile error handling, toast notifications ve conditional rendering implementasyonu yapıldı. Turkish locale formatting for dates eklendi.
+</info added on 2025-08-13T14:57:43.916Z>
+
+## 2. Header Kart ve Bilgi Kartları Grid [done]
+### Dependencies: 11.1
+### Description: Fiş numarası ve tarih bilgilerini gösteren header kart ile 3'lü bilgi kartları grid'ini oluştur
+### Details:
+Header kart: bg-white rounded-lg shadow-sm p-6, fiş numarası ve tarih bilgilerini göster. 3'lü bilgi kartları grid: grid-cols-1 md:grid-cols-3 gap-4. Fiş bilgileri kartı (müşteri, kategori vb.), tarih bilgileri kartı (oluşturma, güncelleme tarihleri), toplam bilgiler kartı (yeşil arka plan bg-green-50 border-green-200). Her kart için rounded-lg border bg-white p-4 shadow-sm stilleri kullan. date-fns ile tr locale kullanarak tarih formatlaması yap.
+<info added on 2025-08-13T14:59:31.234Z>
+Header kart ve bilgi kartları grid'i tamamlandı:
+
+**Implementasyon Detayları:**
+- Header kart oluşturuldu: bg-white rounded-lg shadow-sm p-6 stilleri ile
+- Fiş numarası ve tarih bilgilerini gösteriyor
+- Receipt icon'u ve toplam tutar bilgisi eklendi
+- 3'lü bilgi kartları grid'i implementasyonu yapıldı: grid-cols-1 md:grid-cols-3 gap-4
+
+**Kart Detayları:**
+1. **Temel Bilgiler Kartı:** 
+   - Info icon'u ile mavi tema (bg-blue-100)
+   - ID ve Fiş No bilgilerini gösteriyor
+   
+2. **Tarih Bilgileri Kartı:**
+   - Clock icon'u ile mor tema (bg-purple-100)
+   - Fiş tarihi, oluşturulma ve güncellenme tarihlerini gösteriyor
+   - Turkish locale formatting uygulandı
+   
+3. **Mali Bilgiler Kartı:**
+   - DollarSign icon'u ile yeşil tema (bg-green-50 border-green-200)
+   - Toplam tutar, toplam KDV ve KDV hariç tutar hesaplaması
+   - Özel yeşil arka plan ve border ile vurgulandı
+
+**Teknik Özellikler:**
+- Responsive design: Mobile'da tek sütun, desktop'ta 3 sütun
+- Icon'lar (Calendar, Clock, DollarSign, Info) icons.ts'e eklendi
+- Conditional rendering ile boş field'ları gizleme
+- Turkish locale ile tarih formatlaması
+- Proper typography ve spacing
+- Shadow ve border efektleri
+
+Sonraki subtask: Product table component implementasyonu
+</info added on 2025-08-13T14:59:31.234Z>
+
+## 3. Ürün Tablosu Bileşeni [done]
+### Dependencies: 11.2
+### Description: Ürün detaylarını gösteren responsive tablo bileşenini oluştur
+### Details:
+Ürün tablosu: overflow-x-auto ile responsive wrapper. Tablo sütunları: Ürün Adı, Miktar, Birim Fiyat, KDV, Toplam. Table stilleri: bg-white rounded-lg shadow-sm overflow-hidden. Header: bg-gray-50 font-medium text-gray-900. Satırlar: hover:bg-gray-50 border-b border-gray-200. Para değerleri için Intl.NumberFormat ile tr-TR locale kullan. Miktar ve KDV değerleri için uygun formatlamalar yap.
+
+## 4. Alt Özet Bölümü [done]
+### Dependencies: 11.3
+### Description: Son güncelleme bilgisi ve toplam özet bilgilerini gösteren alt bölümü oluştur
+### Details:
+Alt özet bölümü: flex justify-between items-center bg-gray-50 rounded-lg p-4 mt-6. Sol taraf: son güncelleme tarihi (text-sm text-gray-600, date-fns tr locale ile formatla). Sağ taraf: toplam ürün sayısı ve genel toplam (font-medium text-gray-900). Genel toplam için büyük font boyutu (text-lg) ve para formatlaması kullan. Mobile'da flex-col ile dikey hizalama yap.
+
+## 5. Loading ve Error State Yönetimi [done]
+### Dependencies: 11.1, 11.2, 11.3, 11.4
+### Description: Sayfa için loading spinner ve error handling durumlarını implement et
+### Details:
+Loading state: sayfa merkezi loading spinner (animate-spin), skeleton loader'lar için placeholder kartlar. Error state: hata mesajı kartı (bg-red-50 border-red-200 text-red-800), 'Tekrar Dene' butonu ile retry fonksiyonalitesi. 404 durumu için 'Fiş bulunamadı' mesajı. Try-catch blokları ile API hatalarını yakala. Toast mesajları ile kullanıcı bilgilendirmesi yap. Loading sırasında tüm bileşenlerin skeleton versiyonlarını göster.
+
