@@ -22,7 +22,7 @@ export default function FisDetailPage({ params }: PageProps) {
     const [error, setError] = useState<string | null>(null)
 
     // Helper function to parse items from JSON
-    const parseItems = (items: any): FisItem[] => {
+    const parseItems = (items: unknown): FisItem[] => {
         if (!items) return []
         if (Array.isArray(items)) {
             return items.filter(item =>

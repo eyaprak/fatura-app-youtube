@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import Header from './components/layout/header'
@@ -127,11 +127,13 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {/* Sol Sütun: Filtre Paneli (1 sütun) */}
                 <div className="md:col-span-1">
-                  <FilterPanel
-                    onFilterChange={handleFilterChange}
-                    onReset={handleFilterReset}
-                    hasActiveFilters={hasActiveFilters}
-                  />
+                  <Suspense fallback={<div className="bg-white rounded-lg shadow-sm border p-4">Filtreler yükleniyor...</div>}>
+                    <FilterPanel
+                      onFilterChange={handleFilterChange}
+                      onReset={handleFilterReset}
+                      hasActiveFilters={hasActiveFilters}
+                    />
+                  </Suspense>
                 </div>
 
                 {/* Sağ Sütun: Fiş Listesi (3 sütun) */}

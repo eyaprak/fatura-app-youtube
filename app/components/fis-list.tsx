@@ -41,7 +41,7 @@ interface FisCardProps {
 
 function FisCard({ fis, onSelect }: FisCardProps) {
     // Items alanını güvenli bir şekilde parse et
-    const parseItems = (items: any): FisItem[] => {
+    const parseItems = (items: unknown): FisItem[] => {
         if (!items) return []
         if (Array.isArray(items)) return items
         if (typeof items === 'string') {
@@ -224,6 +224,7 @@ export default function FisList({
 
     // Fiş listesi hook'u (only when external data not provided)
     const hookData = useFisler(1, pageSize, undefined, !useExternalData)
+    const { setFilters } = hookData
 
     // Determine which data source to use
     const fisler = useExternalData ? externalData : hookData.data
@@ -236,12 +237,13 @@ export default function FisList({
     const isValidating = useExternalData ? (externalIsValidating || false) : hookData.isValidating
     const error = useExternalData ? externalError : hookData.error
     const hasActiveFilters = useExternalData ? (externalHasActiveFilters || false) : hookData.hasActiveFilters
+
     // Search effect - update filters when debounced search changes (only for internal hook)
     useEffect(() => {
-        if (!useExternalData && hookData.setFilters) {
-            hookData.setFilters({ search: debouncedSearchQuery })
+        if (!useExternalData && setFilters) {
+            setFilters({ search: debouncedSearchQuery })
         }
-    }, [debouncedSearchQuery, useExternalData, hookData.setFilters])
+    }, [debouncedSearchQuery, useExternalData, setFilters])
 
     // Search input change handler
     const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
