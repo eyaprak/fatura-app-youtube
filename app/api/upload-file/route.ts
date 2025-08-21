@@ -198,11 +198,11 @@ export async function POST(
     try {
       console.log("📡 Sending file to N8N webhook...");
 
-      // Create AbortController for 30 second timeout
+      // Create AbortController for 5 minute timeout
       const abortController = new AbortController();
       const timeoutId = setTimeout(() => {
         abortController.abort();
-      }, 30000); // 30 seconds
+      }, 300000); // 5 minutes (300 seconds)
 
       const webhookResponse = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
@@ -290,7 +290,7 @@ export async function POST(
             error: {
               code: "WEBHOOK_TIMEOUT",
               details:
-                "The webhook request exceeded the 30-second timeout limit",
+                "The webhook request exceeded the 5-minute timeout limit",
             },
           },
           { status: 408 }
